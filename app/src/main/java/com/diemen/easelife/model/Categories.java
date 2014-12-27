@@ -5,6 +5,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by tfs-hitesh on 14/12/14.
  */
@@ -27,9 +30,8 @@ public class Categories {
     @DatabaseField
     private int likes; // number of clicks
 
-    @ForeignCollectionField
-    private ForeignCollection<Subcategory> subcategoryList;
-
+    @DatabaseField
+    private String description;
 
     public boolean isActive() {
         return active;
@@ -37,14 +39,6 @@ public class Categories {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public ForeignCollection<Subcategory> getSubcategoryList() {
-        return subcategoryList;
-    }
-
-    public void setSubcategoryList(ForeignCollection<Subcategory> subcategoryList) {
-        this.subcategoryList = subcategoryList;
     }
 
     public int getLikes() {
@@ -77,5 +71,13 @@ public class Categories {
 
     public void setImageResourcePath(String imageResourcePath) {
         this.imageResourcePath = imageResourcePath;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
