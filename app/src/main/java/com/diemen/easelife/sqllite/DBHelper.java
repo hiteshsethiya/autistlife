@@ -35,7 +35,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         {
             TableUtils.createTable(connectionSource,Categories.class);
 
-            TableUtils.createTable(connectionSource, Subcategory.class);
+            //TableUtils.createTable(connectionSource, Subcategory.class);
+
+            initCategories();
 
         }
         catch(SQLException e)
@@ -93,5 +95,20 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             throw new RuntimeException(e);
         }
         return subcategoriesDao;
+    }
+
+    private void initCategories()
+    {
+        List<Categories> list =  CategorySQLHelper.init();
+
+        for(Categories category : list) {
+            try {
+                getCategoryDao().createIfNotExists(category);
+            }
+            catch (SQLException e)
+            {
+                Log.e("DBHelper","Could not create category insert "+category.getId(),e);
+            }
+        }
     }
 }

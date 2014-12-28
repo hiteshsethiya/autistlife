@@ -25,9 +25,13 @@ public class DBManager {
         }
     }
 
+    static public DBManager getInstance() {
+        return dbManager;
+    }
+
     public DBManager(Context context)
     {
-        dbManager = new DBManager(context);
+        dbHelper = new DBHelper(context);
     }
 
     public static DBManager getDbManager() {

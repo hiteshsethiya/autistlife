@@ -5,9 +5,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import com.diemen.easelife.model.Categories;
+import com.diemen.easelife.sqllite.DBHelper;
+import com.diemen.easelife.sqllite.DBManager;
+
+import java.util.List;
 
 
 public class StartActivity extends ActionBarActivity {
@@ -16,10 +23,15 @@ public class StartActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        DBManager.init(this);
 
+        ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_start,null); // R.layout. Name of the XML file to be associated with this class
         GridView categoriesGridView = (GridView) findViewById(R.id.categories_grid);
+        
+
         categoriesGridView.setAdapter(new CategoriesImageAdapter(this));
 
+    //    setContentView(contentView);
         categoriesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -51,4 +63,11 @@ public class StartActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /* About XML inflator
+    XML Layouts in Android need to be Inflated (parsed into View objects) before they are used. getLayoutInflator() gets you an instance of the LayoutInflator that will allow you to manually inflate layouts for specific uses.
+
+    One example being in a Custom ArrayAdapter to populate a ListView with a Custom Layout.
+
+    You need to manually inflate and populate your desired Layout for each individual list item in the ArrayAdapter's overridden getView() method.*/
 }

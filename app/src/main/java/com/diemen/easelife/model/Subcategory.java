@@ -1,8 +1,6 @@
 package com.diemen.easelife.model;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
@@ -39,9 +37,9 @@ public class Subcategory {
     @DatabaseField
     private String description;
 
-    @ForeignCollectionField
+    /*@ForeignCollectionField
     private ForeignCollection<Categories> categories;
-
+*/
     public int getId() {
         return id;
     }
@@ -106,7 +104,7 @@ public class Subcategory {
         this.description = description;
     }
 
-    public List<Categories> getCategories() {
+    /*public List<Categories> getCategories() {
 
         ArrayList<Categories> subcategoryArrayList = new ArrayList<Categories>();
 
@@ -119,5 +117,5 @@ public class Subcategory {
     }
     public void setCategories(ForeignCollection<Categories> categories) {
         this.categories = categories;
-    }
+    }*/
 }

@@ -1,8 +1,7 @@
 package com.diemen.easelife.model;
 
-import com.j256.ormlite.dao.ForeignCollection;
+
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
@@ -32,6 +31,25 @@ public class Categories {
 
     @DatabaseField
     private String description;
+
+    public Categories(){}
+
+    public Categories( String categoryName, String imageResourcePath, boolean active, int likes, String description) {
+        this.categoryName = categoryName;
+        this.imageResourcePath = imageResourcePath;
+        this.active = active;
+        this.likes = likes;
+        this.description = description;
+    }
+
+    public Categories(int id, String categoryName, String imageResourcePath, boolean active, int likes, String description) {
+        this.id = id;
+        this.categoryName = categoryName;
+        this.imageResourcePath = imageResourcePath;
+        this.active = active;
+        this.likes = likes;
+        this.description = description;
+    }
 
     public boolean isActive() {
         return active;

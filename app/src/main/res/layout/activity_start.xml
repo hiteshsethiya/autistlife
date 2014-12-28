@@ -10,7 +10,7 @@
         android:layout_below="@+id/textView"
         android:layout_toRightOf="@+id/textView"
         android:layout_toEndOf="@+id/textView"
-        android:columnWidth="90dp"
+        android:columnWidth="150dp"
         android:numColumns="auto_fit"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
