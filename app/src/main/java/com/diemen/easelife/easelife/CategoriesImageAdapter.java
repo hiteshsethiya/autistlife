@@ -69,7 +69,7 @@ public class CategoriesImageAdapter extends BaseAdapter{
             else
             {
                 //set image path from Picaso
-                imageView.setImageResource(R.drawable.sample_7);
+                imageView.setImageResource(R.drawable.user);
             }
         }
         else
@@ -80,8 +80,10 @@ public class CategoriesImageAdapter extends BaseAdapter{
     }
 
     private Integer[] categoriesThumbs = {
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6
-    };
+            R.drawable.movie,
+            R.drawable.people,
+            R.drawable.music,
+            R.drawable.places,
+            R.drawable.pizza,
+                };
 }
