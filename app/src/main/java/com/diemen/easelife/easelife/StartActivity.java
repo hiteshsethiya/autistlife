@@ -2,12 +2,15 @@ package com.diemen.easelife.easelife;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.diemen.easelife.model.Categories;
@@ -21,8 +24,10 @@ import java.util.List;
 
 public class StartActivity extends ActionBarActivity {
 
+    GridView categoriesGridView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         Parse.initialize(this, "pBQ7oHoCqFXmzyP4BXQQ1rlyfnzgKxvsCYHRHDMX", "jZy0HekTIFoKFU3fbJENMGkFJDFy3GCsQryrQUKZ");
@@ -33,11 +38,30 @@ public class StartActivity extends ActionBarActivity {
         GridView categoriesGridView = (GridView) findViewById(R.id.categories_grid);
         categoriesGridView.setAdapter(new CategoriesImageAdapter(this));
 
+            categoriesGridView.setAdapter(new CategoriesImageAdapter(this));
+        }
+        catch (Exception e)
+        {
+            Log.e(StartActivity.class.getName(), "Error in StartActivity ", e);
+        }
     //    setContentView(contentView);
         categoriesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(StartActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+
+                LinearLayout linearLayout = (LinearLayout)view;
+                ImageView clickedImageView = (ImageView)linearLayout.getChildAt(0);
+
+                Categories updateCategoryLike = (Categories)clickedImageView.getTag();
+
+
+
+                if(updateCategoryLike != null) {
+                    updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
+                    DBManager.getInstance().updateCategoryLike(updateCategoryLike);
+                    Toast.makeText(StartActivity.this,updateCategoryLike.getDescription() +" Likes:"+updateCategoryLike.getLikes(), Toast.LENGTH_SHORT).show();
+                }
+                //Move to subcategory event
             }
         });
     }

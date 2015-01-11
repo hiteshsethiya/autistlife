@@ -2,17 +2,21 @@ package com.diemen.easelife.easelife;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.sqllite.DBManager;
+import com.diemen.easelife.util.Util;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,6 +31,16 @@ public class CategoriesImageAdapter extends BaseAdapter{
     {
         this.categoriesContext = context;
         this.categoriesList =  DBManager.getInstance().getAllCategories();
+        categoriesThumbHM.put(1,R.drawable.places);
+        categoriesThumbHM.put(2,R.drawable.movie);
+        categoriesThumbHM.put(3,R.drawable.singing);
+        categoriesThumbHM.put(4,R.drawable.people);
+        categoriesThumbHM.put(5,R.drawable.pizza);
+        categoriesThumbHM.put(6,R.drawable.avengers);
+        categoriesThumbHM.put(7,R.drawable.home);
+        categoriesThumbHM.put(8,R.drawable.user);
+        categoriesThumbHM.put(9,R.drawable.school);
+        categoriesThumbHM.put(10,R.drawable.music);
     }
 
     @Override
@@ -51,25 +65,25 @@ public class CategoriesImageAdapter extends BaseAdapter{
         LayoutInflater inflater = (LayoutInflater) categoriesContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        //Implement Sort based on likes to arrange the grid view
-
-
         if(convertView == null)
         {
             grid = new View(categoriesContext);
             grid = inflater.inflate(R.layout.image_and_text,null);
+
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
             ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
-
+            imageView.setTag(categoriesList.get(position));
             textView.setText(categoriesList.get(position).getCategoryName());
-            if(categoriesList.get(position).getImageResourcePath() != null)
+            String imageResourcePath = categoriesList.get(position).getImageResourcePath();
+
+            if(imageResourcePath != null && Util.isInteger(imageResourcePath))
             {
-                imageView.setImageResource(categoriesThumbs[position]);
+                //set image path from Picaso
+                imageView.setImageResource(categoriesThumbHM.get(Integer.parseInt(categoriesList.get(position).getImageResourcePath())));
             }
             else
             {
-                //set image path from Picaso
-                imageView.setImageResource(R.drawable.user);
+                imageView.setImageResource(categoriesThumbHM.get(0));
             }
         }
         else
@@ -79,11 +93,5 @@ public class CategoriesImageAdapter extends BaseAdapter{
         return grid;
     }
 
-    private Integer[] categoriesThumbs = {
-            R.drawable.movie,
-            R.drawable.people,
-            R.drawable.music,
-            R.drawable.places,
-            R.drawable.pizza,
-                };
+    private static HashMap<Integer,Integer> categoriesThumbHM = new HashMap<Integer,Integer>();
 }

@@ -1,8 +1,10 @@
 package com.diemen.easelife.model;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +15,11 @@ import java.util.List;
 @DatabaseTable
 public class Subcategory {
 
-    @DatabaseField
+    @DatabaseField(generatedId = true)
     private int id;
+
+    @DatabaseField
+    private int categoryId;
 
     @DatabaseField
     private String subcategoryName;
@@ -23,13 +28,13 @@ public class Subcategory {
     private String imagePath;
 
     @DatabaseField
-    private String latLong;
+    private double latitude;
 
     @DatabaseField
-    private String createdAt;
+    private double longitude;
 
-    @DatabaseField
-    private String updatedAt;
+    @DatabaseField(dataType = DataType.DATE_STRING, format = "yyyy-MM-dd hh:mm:ss")
+    private Date createdAt;
 
     @DatabaseField
     private boolean active;
@@ -37,15 +42,20 @@ public class Subcategory {
     @DatabaseField
     private String description;
 
-    /*@ForeignCollectionField
-    private ForeignCollection<Categories> categories;
-*/
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getSubcategoryName() {
@@ -64,28 +74,28 @@ public class Subcategory {
         this.imagePath = imagePath;
     }
 
-    public String getLatLong() {
-        return latLong;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLatLong(String latLong) {
-        this.latLong = latLong;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getCreatedAt() {
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public boolean isActive() {
@@ -104,18 +114,28 @@ public class Subcategory {
         this.description = description;
     }
 
-    /*public List<Categories> getCategories() {
+    public Subcategory(){}
 
-        ArrayList<Categories> subcategoryArrayList = new ArrayList<Categories>();
-
-        for(Categories item : categories)
-        {
-            subcategoryArrayList.add(item);
-        }
-
-        return subcategoryArrayList;
+    public Subcategory(int id, int categoryId, String subcategoryName, String imagePath, double latitude, double longitude, Date createdAt, boolean active, String description) {
+        this.id = id;
+        this.categoryId = categoryId;
+        this.subcategoryName = subcategoryName;
+        this.imagePath = imagePath;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.createdAt = createdAt;
+        this.active = active;
+        this.description = description;
     }
-    public void setCategories(ForeignCollection<Categories> categories) {
-        this.categories = categories;
-    }*/
+
+    public Subcategory(int categoryId, String subcategoryName, String imagePath, double latitude, double longitude, Date createdAt, boolean active, String description) {
+        this.categoryId = categoryId;
+        this.subcategoryName = subcategoryName;
+        this.imagePath = imagePath;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.createdAt = createdAt;
+        this.active = active;
+        this.description = description;
+    }
 }

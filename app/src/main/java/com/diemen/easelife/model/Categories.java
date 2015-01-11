@@ -28,6 +28,7 @@ public class Categories {
 
     @DatabaseField
     private int likes; // number of clicks
+    public static final String LIKES_COLUMN_NAME = "likes";
 
     @DatabaseField
     private String description;
@@ -97,5 +98,17 @@ public class Categories {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Categories{" +
+                "id=" + id +
+                ", categoryName='" + categoryName + '\'' +
+                ", imageResourcePath='" + imageResourcePath + '\'' +
+                ", active=" + active +
+                ", likes=" + likes +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

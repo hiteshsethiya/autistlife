@@ -34,10 +34,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         try
         {
             TableUtils.createTable(connectionSource,Categories.class);
-
-            //TableUtils.createTable(connectionSource, Subcategory.class);
-
-            initCategories();
+            TableUtils.createTable(connectionSource, Subcategory.class);
+            init();
 
         }
         catch(SQLException e)
@@ -73,7 +71,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         catch(SQLException e)
         {
             Log.e(DBHelper.class.getName(),"Unable to get Categories DAO! __|__",e);
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return categoryDao;
@@ -97,9 +94,10 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         return subcategoriesDao;
     }
 
-    private void initCategories()
+    private void init()
     {
         List<Categories> list =  CategorySQLHelper.init();
+
 
         for(Categories category : list) {
             try {
@@ -110,5 +108,19 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
                 Log.e("DBHelper","Could not create category insert "+category.getId(),e);
             }
         }
+
+        List<Subcategory> subcategories = CategorySQLHelper.initSubcategory();
+
+        for(Subcategory subcategory : subcategories)
+        {
+            try {
+                getSubcategoriesDao().createIfNotExists(subcategory);
+            }
+            catch (SQLException e)
+            {
+                Log.e("DBHelper","Could not create subcategory insert "+subcategory.getId(),e);
+            }
+        }
     }
+
 }
