@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.sqllite.DBHelper;
 import com.diemen.easelife.sqllite.DBManager;
+import com.parse.Parse;
+import com.parse.ParseInstallation;
 
 import java.util.List;
 
@@ -23,12 +25,12 @@ public class StartActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        Parse.initialize(this, "pBQ7oHoCqFXmzyP4BXQQ1rlyfnzgKxvsCYHRHDMX", "jZy0HekTIFoKFU3fbJENMGkFJDFy3GCsQryrQUKZ");
+        ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
+        currentInstall.put("phone","9742510298");
         DBManager.init(this);
-
         ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_start,null); // R.layout. Name of the XML file to be associated with this class
         GridView categoriesGridView = (GridView) findViewById(R.id.categories_grid);
-        
-
         categoriesGridView.setAdapter(new CategoriesImageAdapter(this));
 
     //    setContentView(contentView);

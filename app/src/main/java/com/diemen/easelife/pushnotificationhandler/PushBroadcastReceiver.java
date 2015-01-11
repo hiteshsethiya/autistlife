@@ -20,4 +20,9 @@ public class PushBroadcastReceiver extends ParsePushBroadcastReceiver{
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
+
+    @Override
+    protected void onPushReceive(Context context, Intent intent) {
+        super.onPushReceive(context, intent);
+    }
 }
