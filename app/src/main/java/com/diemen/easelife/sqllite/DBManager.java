@@ -4,9 +4,11 @@ import android.content.Context;
 import android.util.Log;
 
 import com.diemen.easelife.model.Categories;
+import com.diemen.easelife.model.Subcategory;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,9 +86,42 @@ public class DBManager {
         }
     }
 
-    public int getCategoryLike(int id)
+    public void updateSubcategoryLike(Subcategory subcategory)
+    {
+        try
+        {
+            getDbHelper().getSubcategoriesDao().createOrUpdate(subcategory);
+        }
+        catch(SQLException e)
+        {
+            Log.e(DBManager.class.getName(),"Method: updateCategoryLike() Error in updating category likes "+subcategory.toString(),e);
+            throw new RuntimeException(e);
+
+        }
+    }
+
+    public List<Subcategory> getSubcategoryByCategoryId(int id)
+    {
+        List<Subcategory> list = new ArrayList<Subcategory>();
+
+        try
+        {
+            QueryBuilder<Subcategory,Integer> qb = getDbHelper().getSubcategoriesDao().queryBuilder();
+
+            qb.where().eq(Subcategory.SUBCATEGORY_CATEGORY_ID,id);
+            qb.orderBy(Subcategory.COL_NAME_LIKES,false);
+
+            list = qb.query();
+        }
+        catch(SQLException e)
+        {
+            Log.e(DBManager.class.getName(),"Error while fetching subcategory by categoryid: "+id,e);
+        }
+        return list;
+    }
+    /*public int getCategoryLike(int id)
     {
         QueryBuilder<Categories,Integer> categoryQB = getDbHelper().getCategoryDao().queryBuilder();
         return 0;
-    }
+    }*/
 }

@@ -36,15 +36,15 @@ public class CategorySQLHelper {
     {
         List<Subcategory> initSubcategoryList = new ArrayList<Subcategory>();
 
-        initSubcategoryList.add(new Subcategory(1,2,"Super man","6",0.00,0.00, new Date(),true, "Super man is the Movie i love"));
+        initSubcategoryList.add(new Subcategory(1,2,"Super man","6",0.00,0.00, new Date(),true, "Super man is the Movie i love",0));
 
-        initSubcategoryList.add(new Subcategory(2,4,"Hitesh","8",0.00,0.00, new Date(),true, "Hi, Hitesh! "));
+        initSubcategoryList.add(new Subcategory(2,4,"Hitesh","8",0.00,0.00, new Date(),true, "Hi, Hitesh! ",0));
 
-        initSubcategoryList.add(new Subcategory(3,4,"Anuj","8",0.00,0.00, new Date(),true, "Hi, Anuj! "));
+        initSubcategoryList.add(new Subcategory(3,4,"Anuj","8",0.00,0.00, new Date(),true, "Hi, Anuj! ",0));
 
-        initSubcategoryList.add(new Subcategory(4,1,"School","9",0.00,0.00, new Date(),true, "School Ka Bhosada "));
+        initSubcategoryList.add(new Subcategory(4,1,"School","9",0.00,0.00, new Date(),true, "School Ka Bhosada ",0));
 
-        initSubcategoryList.add(new Subcategory(5,1,"Home","7",0.00,0.00, new Date(),true, "Rastogi chutiya hain! "));
+        initSubcategoryList.add(new Subcategory(5,1,"Home","7",0.00,0.00, new Date(),true, "Rastogi chutiya hain! ",0));
 
         return initSubcategoryList;
     }

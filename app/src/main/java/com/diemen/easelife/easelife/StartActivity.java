@@ -1,5 +1,6 @@
 package com.diemen.easelife.easelife;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,12 +34,12 @@ public class StartActivity extends ActionBarActivity {
         Parse.initialize(this, "pBQ7oHoCqFXmzyP4BXQQ1rlyfnzgKxvsCYHRHDMX", "jZy0HekTIFoKFU3fbJENMGkFJDFy3GCsQryrQUKZ");
         ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
         currentInstall.put("phone","9742510298");
-        DBManager.init(this);
-        ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_start,null); // R.layout. Name of the XML file to be associated with this class
-        GridView categoriesGridView = (GridView) findViewById(R.id.categories_grid);
-        categoriesGridView.setAdapter(new CategoriesImageAdapter(this));
 
-            categoriesGridView.setAdapter(new CategoriesImageAdapter(this));
+        DBManager.init(this);
+
+        ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_start,null); // R.layout. Name of the XML file to be associated with this class
+        categoriesGridView = (GridView) findViewById(R.id.categories_grid);
+        categoriesGridView.setAdapter(new CategoriesImageAdapter(this));
         }
         catch (Exception e)
         {
@@ -54,14 +55,16 @@ public class StartActivity extends ActionBarActivity {
 
                 Categories updateCategoryLike = (Categories)clickedImageView.getTag();
 
-
-
                 if(updateCategoryLike != null) {
                     updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
                     DBManager.getInstance().updateCategoryLike(updateCategoryLike);
                     Toast.makeText(StartActivity.this,updateCategoryLike.getDescription() +" Likes:"+updateCategoryLike.getLikes(), Toast.LENGTH_SHORT).show();
                 }
                 //Move to subcategory event
+                Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
+                subCategoryMove.putExtra("categoryId",updateCategoryLike.getId());
+                startActivity(subCategoryMove);
+                finish();
             }
         });
     }

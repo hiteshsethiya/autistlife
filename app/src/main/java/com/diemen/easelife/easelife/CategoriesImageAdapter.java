@@ -36,8 +36,6 @@ public class CategoriesImageAdapter extends BaseAdapter{
         categoriesThumbHM.put(3,R.drawable.singing);
         categoriesThumbHM.put(4,R.drawable.people);
         categoriesThumbHM.put(5,R.drawable.pizza);
-        categoriesThumbHM.put(6,R.drawable.avengers);
-        categoriesThumbHM.put(7,R.drawable.home);
         categoriesThumbHM.put(8,R.drawable.user);
         categoriesThumbHM.put(9,R.drawable.school);
         categoriesThumbHM.put(10,R.drawable.music);

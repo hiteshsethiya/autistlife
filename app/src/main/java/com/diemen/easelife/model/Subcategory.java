@@ -20,6 +20,7 @@ public class Subcategory {
 
     @DatabaseField
     private int categoryId;
+    public static final String SUBCATEGORY_CATEGORY_ID = "categoryId";
 
     @DatabaseField
     private String subcategoryName;
@@ -41,6 +42,10 @@ public class Subcategory {
 
     @DatabaseField
     private String description;
+
+    @DatabaseField
+    private int likes;
+    public static final String COL_NAME_LIKES = "likes";
 
     public int getId() {
         return id;
@@ -114,9 +119,17 @@ public class Subcategory {
         this.description = description;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
     public Subcategory(){}
 
-    public Subcategory(int id, int categoryId, String subcategoryName, String imagePath, double latitude, double longitude, Date createdAt, boolean active, String description) {
+    public Subcategory(int id, int categoryId, String subcategoryName, String imagePath, double latitude, double longitude, Date createdAt, boolean active, String description, int likes) {
         this.id = id;
         this.categoryId = categoryId;
         this.subcategoryName = subcategoryName;
@@ -126,9 +139,10 @@ public class Subcategory {
         this.createdAt = createdAt;
         this.active = active;
         this.description = description;
+        this.likes = likes;
     }
 
-    public Subcategory(int categoryId, String subcategoryName, String imagePath, double latitude, double longitude, Date createdAt, boolean active, String description) {
+    public Subcategory(int categoryId, String subcategoryName, String imagePath, double latitude, double longitude, Date createdAt, boolean active, String description, int likes) {
         this.categoryId = categoryId;
         this.subcategoryName = subcategoryName;
         this.imagePath = imagePath;
@@ -137,5 +151,22 @@ public class Subcategory {
         this.createdAt = createdAt;
         this.active = active;
         this.description = description;
+        this.likes = likes;
+    }
+
+    @Override
+    public String toString() {
+        return "Subcategory{" +
+                "id=" + id +
+                ", categoryId=" + categoryId +
+                ", subcategoryName='" + subcategoryName + '\'' +
+                ", imagePath='" + imagePath + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", createdAt=" + createdAt +
+                ", active=" + active +
+                ", description='" + description + '\'' +
+                ", likes=" + likes +
+                '}';
     }
 }
