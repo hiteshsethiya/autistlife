@@ -1,15 +1,11 @@
 package com.diemen.easelife.easelife;
 
-import android.app.ActionBar;
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.diemen.easelife.model.Categories;

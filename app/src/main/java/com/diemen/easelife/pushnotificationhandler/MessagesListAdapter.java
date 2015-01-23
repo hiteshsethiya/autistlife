@@ -1,5 +1,6 @@
-
 package com.diemen.easelife.pushnotificationhandler;
+
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -9,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.diemen.easelife.easelife.R;
 import com.diemen.easelife.pushnotificationhandler.Message;
-import java.util.List;
 
 public class MessagesListAdapter extends BaseAdapter {
 
@@ -49,7 +50,8 @@ public class MessagesListAdapter extends BaseAdapter {
 
         Message m = messagesItems.get(position);
 
-        LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater) context
+                .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         // Identifying the message owner
         if (messagesItems.get(position).isSelf()) {
@@ -71,4 +73,3 @@ public class MessagesListAdapter extends BaseAdapter {
         return convertView;
     }
 }
-

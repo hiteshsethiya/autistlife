@@ -31,13 +31,17 @@ public class ChatActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.chat_message);
         btnSend = (Button) findViewById(R.id.btnSend);
         inputMsg = (EditText) findViewById(R.id.inputMsg);
         listViewMessages = (ListView) findViewById(R.id.list_view_messages);
         listMessages = new ArrayList<Message>();
         adapter = new MessagesListAdapter(this, listMessages);
+
+
         listViewMessages.setAdapter(adapter);
         Message newmessage=new Message();
+
         newmessage.setMessage("Hi");
         newmessage.setFromName("anuj");
         newmessage.setSelf(true);

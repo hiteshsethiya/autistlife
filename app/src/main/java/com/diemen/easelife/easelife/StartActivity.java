@@ -1,8 +1,13 @@
 package com.diemen.easelife.easelife;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Contacts;
+import android.provider.ContactsContract;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,17 +20,16 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.diemen.easelife.model.Categories;
-import com.diemen.easelife.sqllite.DBHelper;
+import com.diemen.easelife.model.User;
 import com.diemen.easelife.sqllite.DBManager;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
-
-import java.util.List;
 
 
 public class StartActivity extends ActionBarActivity {
 
     GridView categoriesGridView;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
@@ -78,6 +82,7 @@ public class StartActivity extends ActionBarActivity {
         return true;
     }
 
+    private static final int PICK_CONTACT = 100;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -86,13 +91,53 @@ public class StartActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_new) {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(intent, PICK_CONTACT);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+
+        switch (reqCode) {
+            case (PICK_CONTACT) :
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri contactData = data.getData();
+                    Cursor cursor =  getContentResolver().query(contactData, null, null, null, null);
+                    if (cursor.moveToFirst()) {
+                        String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                        int nameIdx = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                        String hasPhone = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                        String phoneNumber ="";
+                        if ( hasPhone.equalsIgnoreCase("1"))
+                            hasPhone = "true";
+                        else
+                            hasPhone = "false" ;
+
+                        if (Boolean.parseBoolean(hasPhone))
+                        {
+                            Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId,null, null);
+                            while (phones.moveToNext())
+                            {
+                                phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            }
+                            phones.close();
+                        }
+                        String name = cursor.getString(nameIdx);
+
+
+
+                        Toast.makeText(getApplicationContext(),"name:"+name +" phone:"+phoneNumber,Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+    }
     /* About XML inflator
     XML Layouts in Android need to be Inflated (parsed into View objects) before they are used. getLayoutInflator() gets you an instance of the LayoutInflator that will allow you to manually inflate layouts for specific uses.
 

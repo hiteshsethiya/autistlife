@@ -13,11 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.model.Subcategory;
 import com.diemen.easelife.sqllite.DBManager;
-
-import java.util.zip.Inflater;
 
 /**
  * Created by tfs-hitesh on 11/1/15.
@@ -55,6 +52,11 @@ public class SubcategoryActivity extends ActionBarActivity{
                 }
                 //Move to subcategory event
                 Toast.makeText(SubcategoryActivity.this,"Like "+updateCategoryLike.getLikes() + 1,Toast.LENGTH_SHORT).show();
+                Intent userList = new Intent(getApplicationContext(),UserListActivity.class);
+                startActivity(userList);
+
+
+
             }
         });
     }
@@ -83,7 +85,8 @@ public class SubcategoryActivity extends ActionBarActivity{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_new) {
+
             return true;
         }
 
