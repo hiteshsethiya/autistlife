@@ -39,7 +39,7 @@ public class CategoriesImageAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return categoriesList.size();
+        return categoriesList.size()+1;
     }
 
     @Override
@@ -66,18 +66,23 @@ public class CategoriesImageAdapter extends BaseAdapter{
 
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
             ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
-            imageView.setTag(categoriesList.get(position));
-            textView.setText(categoriesList.get(position).getCategoryName());
-            String imageResourcePath = categoriesList.get(position).getImageResourcePath();
-
-            if(imageResourcePath != null && Util.isInteger(imageResourcePath))
+            if(position == categoriesList.size())
             {
-                //set image path from Picaso
-                imageView.setImageResource(categoriesThumbHM.get(Integer.parseInt(categoriesList.get(position).getImageResourcePath())));
+                imageView.setTag(null);
+                textView.setText("Add New Category");
+                imageView.setImageResource(R.drawable.plus);
             }
-            else
-            {
-                imageView.setImageResource(categoriesThumbHM.get(0));
+            else {
+                imageView.setTag(categoriesList.get(position));
+                textView.setText(categoriesList.get(position).getCategoryName());
+                String imageResourcePath = categoriesList.get(position).getImageResourcePath();
+
+                if (imageResourcePath != null && Util.isInteger(imageResourcePath)) {
+                    //set image path from Picaso
+                    imageView.setImageResource(categoriesThumbHM.get(Integer.parseInt(categoriesList.get(position).getImageResourcePath())));
+                } else {
+                    imageView.setImageResource(categoriesThumbHM.get(0));
+                }
             }
         }
         else

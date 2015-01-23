@@ -63,12 +63,17 @@ public class StartActivity extends ActionBarActivity {
                     updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
                     DBManager.getInstance().updateCategoryLike(updateCategoryLike);
                     Toast.makeText(StartActivity.this,updateCategoryLike.getDescription() +" Likes:"+updateCategoryLike.getLikes(), Toast.LENGTH_SHORT).show();
+                    //Move to subcategory event
+                    Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
+                    subCategoryMove.putExtra("categoryId",updateCategoryLike.getId());
+                    startActivity(subCategoryMove);
+                    finish();
                 }
-                //Move to subcategory event
-                Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
-                subCategoryMove.putExtra("categoryId",updateCategoryLike.getId());
-                startActivity(subCategoryMove);
-                finish();
+                else
+                {
+
+                }
+
             }
         });
     }
