@@ -51,6 +51,8 @@ public class UserListAdapter extends BaseAdapter {
         TextView title = (TextView)vi.findViewById(R.id.title); // title
         TextView artist = (TextView)vi.findViewById(R.id.artist); // artist name
         ImageView thumb_image=(ImageView)vi.findViewById(R.id.list_image); // thumb image
+
+        title.setTag(data.get(position));
         User  song = data.get(position);
         // Setting all values in listview
 

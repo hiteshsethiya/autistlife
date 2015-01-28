@@ -1,9 +1,15 @@
 package com.diemen.easelife.pushnotificationhandler;
 
 import android.app.Application;
+import android.content.Context;
+import android.telephony.TelephonyManager;
 
+import com.parse.GetCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.io.Console;
 
@@ -15,9 +21,8 @@ public class PushInit extends Application {
     public void onCreate() {
         super.onCreate();
         Parse.initialize(this, "pBQ7oHoCqFXmzyP4BXQQ1rlyfnzgKxvsCYHRHDMX", "jZy0HekTIFoKFU3fbJENMGkFJDFy3GCsQryrQUKZ");
-      //  ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
-       // currentInstall.put("phone","9742510297");
-       // System.out.println("Anuj:Resgistration sucessful");
-
+        ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
+        currentInstall.put("phone","9742510299");
+        System.out.println("Anuj:Resgistration sucessful");
     }
 }

@@ -9,8 +9,11 @@ import android.widget.ListView;
 
 import com.diemen.easelife.model.User;
 import com.diemen.easelife.pushnotificationhandler.ChatActivity;
+import com.diemen.easelife.sqllite.DBManager;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by user on 23-01-2015.
@@ -30,6 +33,7 @@ public class UserListActivity extends ActionBarActivity {
         adapter=new UserListAdapter(this, mList);
         createList();
         list.setAdapter(adapter);
+        list.setItemsCanFocus(true);
 
         // Click event for single list row
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -37,8 +41,16 @@ public class UserListActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                User user=mList.get(position);
                 Intent gotoChat;
+                ParseUser currentUser=ParseUser.getCurrentUser();
                 gotoChat = new Intent(getApplicationContext(), ChatActivity.class);
+                gotoChat.putExtra("Receiver",user.getName());
+                gotoChat.putExtra("ReceiverPhone",user.getPhoneNo());
+                gotoChat.putExtra("SenderPhone",currentUser.getEmail());
+                gotoChat.putExtra("Sender",currentUser.getUsername());
+
+
                 startActivity(gotoChat);
 
             }
@@ -46,13 +58,13 @@ public class UserListActivity extends ActionBarActivity {
     }
 
     public void createList(){
+
+        List<User> userList= DBManager.getInstance().getAllUsers();
+        for(User u : userList )
+        {
+            mList.add(u);
+        }
         mList.add(new User("Anuj", "234234234242"));
-        mList.add(new User("Anuj1", "234234234242"));
-        mList.add(new User("Anuj3", "234234234242"));
-        mList.add(new User("Anuj5", "234234234242"));
-        mList.add(new User("Anuj6", "234234234242"));
-
-
 
     }
 }

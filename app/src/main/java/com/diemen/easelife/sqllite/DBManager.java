@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.diemen.easelife.model.Categories;
+import com.diemen.easelife.model.Chat;
 import com.diemen.easelife.model.Subcategory;
+import com.diemen.easelife.model.User;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
@@ -85,6 +87,57 @@ public class DBManager {
             throw new RuntimeException(e);
         }
     }
+
+    public void addUser(User user)
+    {
+        try
+        {
+            getDbHelper().getUserDao().createOrUpdate(user);
+        }
+        catch(SQLException e)
+        {
+            Log.e(DBManager.class.getName(),"Method Add User ",e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void addChat(Chat chat)
+    {
+        try
+        {
+            getDbHelper().getChatDao().createOrUpdate(chat);
+        }
+        catch(SQLException e)
+        {
+            Log.e(DBManager.class.getName(),"Method Chat addChat ",e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<User> getAllUsers()
+    {
+       try{
+           List<User> list= getDbHelper().getUserDao().queryForAll();
+           return list;
+       } catch (SQLException e) {
+           Log.e(DBManager.class.getName(),"Get list of all Users ",e);
+           throw new RuntimeException(e);
+       }
+    }
+
+    public List<Chat> getAllChats(String Sender,String Receiver)
+    {
+        try{
+            List<Chat> list =getDbHelper().getChatDao().queryForEq("SenderPhone",Sender);
+            return list;
+        }
+        catch (SQLException e){
+            Log.e(DBManager.class.getName(),"Get all chats ",e);
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     public void updateSubcategoryLike(Subcategory subcategory)
     {

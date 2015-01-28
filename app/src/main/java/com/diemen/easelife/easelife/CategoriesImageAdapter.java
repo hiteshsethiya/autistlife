@@ -70,7 +70,7 @@ public class CategoriesImageAdapter extends BaseAdapter{
             {
                 imageView.setTag(null);
                 textView.setText("Add New Category");
-                imageView.setImageResource(R.drawable.plus);
+
             }
             else {
                 imageView.setTag(categoriesList.get(position));

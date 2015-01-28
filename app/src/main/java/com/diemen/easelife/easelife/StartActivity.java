@@ -29,16 +29,12 @@ import com.parse.ParseInstallation;
 public class StartActivity extends ActionBarActivity {
 
     GridView categoriesGridView;
-    User user;
+    User AddUser=new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        Parse.initialize(this, "pBQ7oHoCqFXmzyP4BXQQ1rlyfnzgKxvsCYHRHDMX", "jZy0HekTIFoKFU3fbJENMGkFJDFy3GCsQryrQUKZ");
-        ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
-        currentInstall.put("phone","9742510298");
-
         DBManager.init(this);
 
         ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_start,null); // R.layout. Name of the XML file to be associated with this class
@@ -135,6 +131,11 @@ public class StartActivity extends ActionBarActivity {
                         }
                         String name = cursor.getString(nameIdx);
 
+                        if(name!="" && phoneNumber!="") {
+                            AddUser.setName(name);
+                            AddUser.setPhoneNo(phoneNumber);
+                            DBManager.getInstance().addUser(AddUser);
+                        }
 
 
                         Toast.makeText(getApplicationContext(),"name:"+name +" phone:"+phoneNumber,Toast.LENGTH_LONG).show();
