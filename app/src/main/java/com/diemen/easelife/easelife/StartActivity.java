@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.diemen.easelife.model.Categories;
@@ -51,7 +52,7 @@ public class StartActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                LinearLayout linearLayout = (LinearLayout)view;
+                RelativeLayout linearLayout = (RelativeLayout)view;
                 ImageView clickedImageView = (ImageView)linearLayout.getChildAt(0);
 
                 Categories updateCategoryLike = (Categories)clickedImageView.getTag();

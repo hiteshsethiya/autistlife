@@ -34,7 +34,7 @@ public class SubcategoryImageAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return subcategories.size();
+        return subcategories.size()+1;
     }
 
     @Override
@@ -58,25 +58,27 @@ public class SubcategoryImageAdapter extends BaseAdapter{
         if(convertView == null)
         {
             grid = new View(subcategoryContext);
-            grid = inflater.inflate(R.layout.image_and_text,null);
+            grid = inflater.inflate(R.layout.grid_item,null);
 
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
             ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
-
-            imageView.setTag(subcategories.get(position));
-            textView.setText(subcategories.get(position).getSubcategoryName());
-
-            String imageResourcePath = subcategories.get(position).getImagePath();
-
-            if(imageResourcePath != null && Util.isInteger(imageResourcePath))
+            if(position == subcategories.size())
             {
-                imageView.setImageResource(subcategoriesThumbHM.get(Integer.parseInt(subcategories.get(position).getImagePath())));
-            }
-            else
-            {
-                imageView.setImageResource(subcategoriesThumbHM.get(0));
-            }
+                imageView.setTag(null);
+                textView.setText("Add SubCategory");
+                imageView.setImageResource(R.drawable.add_category);
+            }else {
+                imageView.setTag(subcategories.get(position));
+                textView.setText(subcategories.get(position).getSubcategoryName());
 
+                String imageResourcePath = subcategories.get(position).getImagePath();
+
+                if (imageResourcePath != null && Util.isInteger(imageResourcePath)) {
+                    imageView.setImageResource(subcategoriesThumbHM.get(Integer.parseInt(subcategories.get(position).getImagePath())));
+                } else {
+                    imageView.setImageResource(subcategoriesThumbHM.get(0));
+                }
+            }
         }
         else
         {

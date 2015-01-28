@@ -1,48 +1,42 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dip"
-  >
+    android:orientation="vertical"
+    android:padding="10dip">
     <!--  Name Label -->
-    <TextView android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#372c24"
-        android:text="NAME"
-         />
+    <TextView
+        style="@style/textview_bold"
+        android:text="NAME" />
 
-    <EditText android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"
-        android:layout_marginBottom="20dip"
-        android:singleLine="true"
-        android:id="@+id/username" />
+
+    <EditText
+        android:id="@+id/username"
+        style="@style/edittext_normal"
+        android:hint="Your Name"
+        android:imeOptions="actionNext" />
     <!--  Phone Label -->
-    <TextView android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#372c24"
-        android:text="PHONE"/>
+    <TextView
+        style="@style/textview_bold"
+        android:text="PHONE" />
 
-    <EditText android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"
-        android:singleLine="true"
-        android:id="@+id/phone" />
+    <EditText
+        android:id="@+id/phone"
+        style="@style/edittext_normal"
+        android:hint="Phone Number"
+        android:inputType="number"
+        android:imeOptions="actionDone" />
 
     <!-- Login button -->
-    <Button android:id="@+id/btnLogin"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:text="Login"/>
+    <Button
+        android:id="@+id/btnLogin"
+        style="@style/btn"
+        android:layout_marginTop="60dip"
+        android:text="Login" />
 
     <Button
         android:id="@+id/signupbutton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:text="SIGNUP"
-        android:layout_gravity="center_horizontal" />
+        style="@style/btn"
+        android:layout_marginTop="40dip"
+        android:text="SIGNUP" />
 
 </LinearLayout>

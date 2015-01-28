@@ -14,4 +14,31 @@
     <color name="text_msg_input">#626262</color>
     <color name="lblFromName">#777777</color>
     <color name="red_color">#FF6600</color>
+
+    <!-- Blue color -->
+    <color name="accent">#FFFFFF</color>
+      <color name="orange_500">#2196F3</color>
+     <color name="orange_050">#E3F2FD</color>
+     <color name="orange_100">#BBDEFB</color>
+     <color name="orange_200">#90CAF9</color>
+     <color name="orange_300">#64B5F6</color>
+     <color name="orange_400">#42A5F5</color>
+     <color name="orange_600">#1E88E5</color>
+     <color name="orange_700">#1976D2</color>
+     <color name="orange_800">#1565C0</color>
+     <color name="orange_900">#0D47A1</color>
+
+     <color name="orange_a100">#82B1FF</color>
+     <color name="orange_a200">#448AFF</color>
+     <color name="orange_a400">#2979FF</color>
+     <color name="orange_a700">#2962FF</color>
+    <color name="trans">#00000000</color>
+    <color name="black_trans">#BB1565C0</color>
+
+    <!-- button color -->
+    <color name="btn_color">@color/orange_800</color>
+    <color name="btn_pressed">@color/orange_300</color>
+    <color name="btn_border">@color/trans</color>
+    <color name="btn_txt_pressed">#000000</color>
+    <color name="btn_txt_color">#FFFFFF</color>
 </resources>

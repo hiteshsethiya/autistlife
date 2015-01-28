@@ -49,6 +49,8 @@ public class AddNewStuff extends ActionBarActivity {
     private String viewPlate = "First Text Field";
     private AlertDialog dialog;
     private static Intent whereToGoBack;
+    private static int IMG_WIDTH = 350;
+    private static int IMG_HEiGHT = 350;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +140,7 @@ public class AddNewStuff extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_start, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
@@ -166,7 +168,7 @@ public class AddNewStuff extends ActionBarActivity {
                     bm = BitmapFactory.decodeFile(f.getAbsolutePath(),
                             btmapOptions);
 
-                    bm = Bitmap.createScaledBitmap(bm, 128,128, true);
+                    bm = Bitmap.createScaledBitmap(bm, IMG_WIDTH,IMG_HEiGHT, true);
                     selectImageBtn.setImageBitmap(bm);
 
                     String path = android.os.Environment
@@ -200,7 +202,7 @@ public class AddNewStuff extends ActionBarActivity {
                 Bitmap bm;
                 BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
                 bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
-                bm = Bitmap.createScaledBitmap(bm,128,128,true);
+                bm = Bitmap.createScaledBitmap(bm,IMG_WIDTH,IMG_HEiGHT,true);
                 selectImageBtn.setImageBitmap(bm);
             }
         }

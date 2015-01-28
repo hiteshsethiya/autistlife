@@ -1,23 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="horizontal"
-    >
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
     <GridView
         android:id="@+id/categories_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/textView"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:columnWidth="150dp"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="5dp"
-        android:horizontalSpacing="5dp"
         android:gravity="center"
+        android:horizontalSpacing="20dp"
+        android:numColumns="auto_fit"
+        android:padding="10dp"
         android:stretchMode="columnWidth"
-        >
+        android:verticalSpacing="20dp">
 
-</GridView>
+    </GridView>
 </LinearLayout>
 

@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.diemen.easelife.model.Subcategory;
@@ -40,7 +41,7 @@ public class SubcategoryActivity extends ActionBarActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                LinearLayout linearLayout = (LinearLayout)view;
+                RelativeLayout linearLayout = (RelativeLayout)view;
                 ImageView clickedImageView = (ImageView)linearLayout.getChildAt(0);
 
                 Subcategory updateCategoryLike = (Subcategory)clickedImageView.getTag();
@@ -72,7 +73,7 @@ public class SubcategoryActivity extends ActionBarActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_start, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 

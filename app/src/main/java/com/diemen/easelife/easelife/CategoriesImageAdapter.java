@@ -62,7 +62,7 @@ public class CategoriesImageAdapter extends BaseAdapter{
         if(convertView == null)
         {
             grid = new View(categoriesContext);
-            grid = inflater.inflate(R.layout.image_and_text,null);
+            grid = inflater.inflate(R.layout.grid_item,null);
 
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
             ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
@@ -70,7 +70,7 @@ public class CategoriesImageAdapter extends BaseAdapter{
             {
                 imageView.setTag(null);
                 textView.setText("Add New Category");
-
+                imageView.setImageResource(R.drawable.add_category);
             }
             else {
                 imageView.setTag(categoriesList.get(position));
