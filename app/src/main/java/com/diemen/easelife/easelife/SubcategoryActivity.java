@@ -54,9 +54,7 @@ public class SubcategoryActivity extends ActionBarActivity{
                 Toast.makeText(SubcategoryActivity.this,"Like "+updateCategoryLike.getLikes() + 1,Toast.LENGTH_SHORT).show();
                 Intent userList = new Intent(getApplicationContext(),UserListActivity.class);
                 startActivity(userList);
-
-
-
+                finish();
             }
         });
     }
@@ -68,6 +66,7 @@ public class SubcategoryActivity extends ActionBarActivity{
         Intent i=new Intent(this, StartActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
+        finish();
     }
 
     @Override

@@ -122,4 +122,11 @@ public class ChatActivity extends Activity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this,StartActivity.class);
+        startActivity(i);
+    }
 }

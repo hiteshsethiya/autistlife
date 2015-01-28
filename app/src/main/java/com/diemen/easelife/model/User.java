@@ -6,6 +6,10 @@ import com.j256.ormlite.field.DatabaseField;
  * Created by user on 23-01-2015.
  */
 public class User {
+
+    public User() {
+    }
+
     public User(String name, String phoneNo) {
         this.name = name;
         this.phoneNo = phoneNo;

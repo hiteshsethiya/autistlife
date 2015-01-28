@@ -1,6 +1,9 @@
 package com.diemen.easelife.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -12,7 +15,7 @@ import java.util.List;
  */
 
 @DatabaseTable
-public class Categories {
+public class Categories implements Parcelable{
 
     @DatabaseField(generatedId = true)
     private int id;
@@ -111,4 +114,44 @@ public class Categories {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return EaseLifeConstants.CATEGORIES_OBJECT;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(this.id);
+        dest.writeString(this.categoryName);
+        dest.writeString(this.imageResourcePath);
+        dest.writeInt(this.likes);
+        dest.writeByte((byte) (this.active ? 1 : 0));
+        dest.writeString(this.description);
+    }
+
+    public static Categories readFromParcel(Parcel in)
+    {
+        int id = in.readInt();
+        String categoryName = in.readString();
+        String imageResourcePath = in.readString();
+        int likes = in.readInt();
+        boolean active = (boolean)(in.readByte()==1 ? true:false);
+        String description = in.readString();
+
+        return new Categories(id,categoryName,imageResourcePath, active,likes,description);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() // (5)
+    {
+        public Categories createFromParcel(Parcel in) // (6)
+        {
+            return readFromParcel(in);
+        }
+
+        public Categories[] newArray(int size) { // (7)
+            return new Categories[size];
+        }
+    };
 }

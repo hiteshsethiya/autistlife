@@ -1,5 +1,8 @@
 package com.diemen.easelife.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -13,7 +16,7 @@ import java.util.List;
  */
 
 @DatabaseTable
-public class Subcategory {
+public class Subcategory implements Parcelable {
 
     @DatabaseField(generatedId = true)
     private int id;
@@ -168,5 +171,15 @@ public class Subcategory {
                 ", description='" + description + '\'' +
                 ", likes=" + likes +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return EaseLifeConstants.SUB_CATEGORIES_OBJECT;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this);
     }
 }

@@ -13,6 +13,8 @@
     <uses-permission android:name="com.diemen.easelife.easelife.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <permission android:protectionLevel="signature" android:name="com.diemen.easelife.easelife.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:name="com.diemen.easelife.pushnotificationhandler.PushInit"
@@ -71,6 +73,7 @@
         </activity>
 
         <activity
+
             android:name=".LoginActivity"
             android:label="Login" >
             <intent-filter>
@@ -78,6 +81,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".AddNewStuff"
+            android:label="Add New" >
+            <intent-filter>
+                <action android:name="com.diemen.easelife.easelife.ADDNEWSTUFF" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".ImageSelectAlertDialogActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog"
+            android:noHistory="true"
+            android:label="Select Your Image">
+        </activity>
+
     </application>
 
 </manifest>

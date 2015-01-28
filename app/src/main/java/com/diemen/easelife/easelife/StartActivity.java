@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.diemen.easelife.model.Categories;
+import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.model.User;
 import com.diemen.easelife.sqllite.DBManager;
 import com.parse.Parse;
@@ -61,15 +62,17 @@ public class StartActivity extends ActionBarActivity {
                     Toast.makeText(StartActivity.this,updateCategoryLike.getDescription() +" Likes:"+updateCategoryLike.getLikes(), Toast.LENGTH_SHORT).show();
                     //Move to subcategory event
                     Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
-                    subCategoryMove.putExtra("categoryId",updateCategoryLike.getId());
+                    subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
                     startActivity(subCategoryMove);
-                    finish();
                 }
                 else
                 {
-
+                    Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
+                    addNewStuffIntent.putExtra("object", EaseLifeConstants.CATEGORIES_OBJECT);
+                    startActivity(addNewStuffIntent);
+                    Toast.makeText(StartActivity.this,"Gand marlenge", Toast.LENGTH_SHORT).show();
                 }
-
+                finish();
             }
         });
     }

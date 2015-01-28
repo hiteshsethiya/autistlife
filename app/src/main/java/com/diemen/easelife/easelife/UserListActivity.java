@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.diemen.easelife.model.Subcategory;
 import com.diemen.easelife.model.User;
 import com.diemen.easelife.pushnotificationhandler.ChatActivity;
 import com.diemen.easelife.sqllite.DBManager;
@@ -52,7 +53,7 @@ public class UserListActivity extends ActionBarActivity {
 
 
                 startActivity(gotoChat);
-
+                finish();
             }
         });
     }
@@ -66,5 +67,14 @@ public class UserListActivity extends ActionBarActivity {
         }
         mList.add(new User("Anuj", "234234234242"));
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent subcategory = new Intent(getApplicationContext(),SubcategoryActivity.class);
+        startActivity(subcategory);
+        finish();
     }
 }
