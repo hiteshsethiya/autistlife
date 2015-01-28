@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -80,10 +81,12 @@ public class LoginActivity extends ActionBarActivity {
                     ParseUser user = new ParseUser();
                     user.setUsername(Name);
                     user.setPassword(PhoneNo);
-                    user.setEmail(PhoneNo);
+                    user.put("PhoneNumber",PhoneNo);
                     user.signUpInBackground(new SignUpCallback() {
                         public void done(com.parse.ParseException e) {
                             if (e == null) {
+                                ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
+                                currentInstall.put("phone",PhoneNo);
                                 Intent i = new Intent(getApplicationContext(), StartActivity.class);
                                 startActivity(i);
                                 finish();

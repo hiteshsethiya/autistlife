@@ -135,9 +135,11 @@ public class StartActivity extends ActionBarActivity {
                         }
                         String name = cursor.getString(nameIdx);
 
+                        String Phone=phoneNumber.length()>10?phoneNumber.substring(phoneNumber.length()-10):phoneNumber;
+
                         if(name!="" && phoneNumber!="") {
                             AddUser.setName(name);
-                            AddUser.setPhoneNo(phoneNumber);
+                            AddUser.setPhoneNo(Phone);
                             DBManager.getInstance().addUser(AddUser);
                         }
 
