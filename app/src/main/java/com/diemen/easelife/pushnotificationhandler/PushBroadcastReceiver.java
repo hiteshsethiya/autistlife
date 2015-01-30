@@ -29,20 +29,22 @@ public class PushBroadcastReceiver extends ParsePushBroadcastReceiver{
         try {
             object=new JSONObject(intent.getExtras().getString("com.parse.Data"));
             chat.setSender(object.getString("Sender"));
+            i.putExtra("Sender", object.getString("Sender"));
             chat.setReceiver(object.getString("Receiver"));
+            i.putExtra("Receiver", object.getString("Receiver"));
             chat.setReceiverPhone(object.getString("ReceiverPhone"));
+            i.putExtra("ReceiverPhone",object.getString("ReceiverPhone"));
             chat.setSenderPhone(object.getString("SenderPhone"));
+            i.putExtra("SenderPhone", object.getString("SenderPhone"));
             chat.setMessage(object.getString("Message"));
+            chat.setSelf(false);
             String Test="Test";
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        DBManager.init(context);
         DBManager.getInstance().addChat(chat);
-        i.putExtra("SenderPhone", chat.getSenderPhone());
-        i.putExtra("ReceiverPhone",chat.getReceiverPhone());
-        i.putExtra("Receiver", chat.getReceiver());
-        i.putExtra("Sender", chat.getSender());
+
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }

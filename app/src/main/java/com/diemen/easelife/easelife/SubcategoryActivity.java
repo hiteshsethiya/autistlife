@@ -64,9 +64,9 @@ public class SubcategoryActivity extends ActionBarActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i=new Intent(this, StartActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
+//        Intent i=new Intent(this, StartActivity.class);
+//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        startActivity(i);
         finish();
     }
 
@@ -88,6 +88,9 @@ public class SubcategoryActivity extends ActionBarActivity{
         if (id == R.id.action_new) {
 
             return true;
+        }else if(id == R.id.action_settings){
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

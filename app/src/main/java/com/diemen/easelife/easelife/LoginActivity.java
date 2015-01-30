@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.diemen.easelife.pushnotificationhandler.PushInit;
 import com.parse.LogInCallback;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
@@ -82,6 +83,7 @@ public class LoginActivity extends ActionBarActivity {
                     user.setUsername(Name);
                     user.setPassword(PhoneNo);
                     user.put("PhoneNumber",PhoneNo);
+                    PushInit.setPhoneNo(PhoneNo);
                     user.signUpInBackground(new SignUpCallback() {
                         public void done(com.parse.ParseException e) {
                             if (e == null) {

@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * Created by user on 11-01-2015.
  */
-public class ChatActivity extends Activity {
+public class ChatActivity extends ActionBarActivity {
 
     private Button btnSend;
     private EditText inputMsg;
@@ -52,25 +53,25 @@ public class ChatActivity extends Activity {
         listMessages = new ArrayList<Message>();
         adapter = new MessagesListAdapter(this, listMessages);
         listViewMessages.setAdapter(adapter);
-        Message newmessage=new Message();
 
 
-        Intent chatIntent=getIntent();
-        final String ReceiverPhone=chatIntent.getStringExtra("ReceiverPhone");
-        final String SenderPhone=chatIntent.getStringExtra("SenderPhone");
-        String Receiver=chatIntent.getStringExtra("Receiver");
-        final String Sender=chatIntent.getStringExtra("Sender");
 
-
+        Bundle chatIntent=getIntent().getExtras();
+        final String ReceiverPhone=chatIntent.getString("ReceiverPhone");
+        final String SenderPhone=chatIntent.getString("SenderPhone");
+        final String Receiver=chatIntent.getString("Receiver");
+        final String Sender=chatIntent.getString("Sender");
+        getSupportActionBar().setTitle(Receiver);
 
 
         List<Chat> list=DBManager.getInstance().getAllChats(SenderPhone,ReceiverPhone);
 
         for(Chat c: list)
         {
+          Message newmessage=new Message();
           newmessage.setFromName(c.getSender());
           newmessage.setMessage(c.getMessage());
-          newmessage.setSelf(false);
+          newmessage.setSelf(c.isSelf());
           appendMessage(newmessage);
         }
 
@@ -80,30 +81,40 @@ public class ChatActivity extends Activity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseUser currentUser=ParseUser.getCurrentUser();
-                Chat chat=new Chat();
-                chat.setMessage(inputMsg.getText().toString());
-                Date date=new Date();
-                date.getTime();
+                String message = inputMsg.getText().toString();
+                if (message != null && !message.isEmpty()) {
+                    ParseUser currentUser = ParseUser.getCurrentUser();
+                    Chat chat = new Chat();
+                    chat.setMessage(inputMsg.getText().toString());
+                    chat.setSelf(true);
+                    Date date = new Date();
+                    date.getTime();
+
+                    Message newmessage = new Message();
+                    newmessage.setFromName(currentUser.getUsername());
+                    newmessage.setMessage(message);
+                    newmessage.setSelf(true);
+                    appendMessage(newmessage);
+                    inputMsg.setText("");
+
+                    //  pushMessage.setMessage(message.getText().toString());
+                    JSONObject data;
+                    try {
+                        ParseQuery pQuery = new ParseInstallation().getQuery();
+                        pQuery.whereEqualTo("phone", ReceiverPhone);
+                        ParsePush pushMessage = new ParsePush();
+                        pushMessage.setQuery(pQuery);
+                        data = new JSONObject("{\"alert\":\"New Message\",\"Message\": \"" + chat.getMessage() + "\",\"ReceiverPhone\": \"" + ReceiverPhone + "\",\"Sender\":\"" + Sender + "\",\"Receiver\":\"" + Receiver + "\" ,\"SenderPhone\":\"" + SenderPhone + "\",\"ReceivedOn\":\"" + date.getTime() + "\"}");
+                        pushMessage.setMessage("Anuj");
+                        pushMessage.setData(data);
+                        pushMessage.sendInBackground();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
 
-              //  pushMessage.setMessage(message.getText().toString());
-                JSONObject data;
-                try {
-                    ParseQuery pQuery=new ParseInstallation().getQuery();
-                    pQuery.whereEqualTo("phone",SenderPhone);
-                    ParsePush pushMessage=new ParsePush();
-                    pushMessage.setQuery(pQuery);
-                  data = new JSONObject("{\"alert\":\"New Message\",\"Message\": \""+chat.getMessage()+"\",\"ReceiverPhone\": \""+ReceiverPhone+"\",\"Sender\":\""+Sender+"\" ,\"SenderPhone\":\""+SenderPhone+"\",\"ReceivedOn\":\""+date.getTime()+"\"}");
-                  pushMessage.setMessage("Anuj");
-                  pushMessage.setData(data);
-                  pushMessage.sendInBackground();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-
-
             }
         });
 
@@ -112,15 +123,12 @@ public class ChatActivity extends Activity {
 
     }
 
-    private void appendMessage(final Message m) {
-        runOnUiThread(new Runnable() {
+    private void appendMessage(Message m) {
 
-            @Override
-            public void run() {
                 listMessages.add(m);
                 adapter.notifyDataSetChanged();
-            }
-        });
+
+
     }
 
     @Override
