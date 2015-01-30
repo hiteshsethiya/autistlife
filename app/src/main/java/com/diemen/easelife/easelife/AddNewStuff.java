@@ -44,9 +44,9 @@ public class AddNewStuff extends ActionBarActivity {
     private EditText descriptionEditText;
     private Button addButton;
     private ImageButton selectImageBtn;
-    private Categories category = null;
-    private Subcategory subcategory = null;
-    private String viewPlate = "First Text Field";
+    private Categories newCategory = null;
+    private Subcategory newSubcategory = null;
+    private String viewPlate;
     private AlertDialog dialog;
     private static Intent whereToGoBack;
     private static int IMG_WIDTH = 350;
@@ -67,11 +67,16 @@ public class AddNewStuff extends ActionBarActivity {
         if (whichClass == EaseLifeConstants.CATEGORIES_OBJECT) {
             viewPlate = "Category";
             whereToGoBack = new Intent(this, StartActivity.class);
-
-        } else if (whichClass == EaseLifeConstants.SUB_CATEGORIES_OBJECT) {
+            newCategory = new Categories();
+            newSubcategory = null;
+        }
+        else if (whichClass == EaseLifeConstants.SUB_CATEGORIES_OBJECT) {
             viewPlate = "Sub Category";
             whereToGoBack = new Intent(this, SubcategoryActivity.class);
-        } else {
+            newSubcategory = new Subcategory();
+            newCategory = null;
+        }
+        else {
             viewPlate = "User";
             whereToGoBack = new Intent(this, UserListActivity.class);
         }
@@ -83,13 +88,12 @@ public class AddNewStuff extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                if (nameEditText != null || nameEditText.getText().length() < 2) {
+                if (nameEditText.getText().toString().trim().length() < 2) {
                     nameEditText.setBackgroundColor(getResources().getColor(R.color.red_color));
-                    Toast.makeText(AddNewStuff.this, "  cannot be left blank:", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddNewStuff.this,"Please enter a "+viewPlate+" name", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String name = nameEditText.getText().toString().trim();
-                String description = descriptionEditText.getText().toString().trim();
+
             }
         });
 
@@ -225,4 +229,8 @@ public class AddNewStuff extends ActionBarActivity {
     }
 
 
+    private static void save()
+    {
+
+    }
 }

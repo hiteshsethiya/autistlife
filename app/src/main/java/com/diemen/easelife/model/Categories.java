@@ -3,10 +3,14 @@ package com.diemen.easelife.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import com.diemen.easelife.sqllite.DBHelper;
+import com.diemen.easelife.sqllite.DBManager;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,4 +158,9 @@ public class Categories implements Parcelable{
             return new Categories[size];
         }
     };
+
+    public boolean save(Categories categories)
+    {
+        return DBManager.getInstance().saveCategory(categories);
+    }
 }
