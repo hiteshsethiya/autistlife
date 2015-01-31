@@ -172,6 +172,41 @@ public class DBManager {
         }
         return list;
     }
+
+    public boolean saveCategory(Categories categories)
+    {
+        boolean status = false;
+
+        try
+        {
+            getDbHelper().getCategoryDao().createOrUpdate(categories);
+            status = true;
+        }
+        catch(SQLException e)
+        {
+            status = false;
+            Log.e("DBManager","SQL exception while saving category object "+categories.toString(),e);
+        }
+        return status;
+    }
+
+    public boolean saveSubCategory(Subcategory subcategory)
+    {
+        boolean status = false;
+
+        try
+        {
+            getDbHelper().getSubcategoriesDao().createOrUpdate(subcategory);
+            status = true;
+        }
+        catch(SQLException e)
+        {
+            status = false;
+            Log.e("DBManager","SQL exception while saving subcategory object "+subcategory.toString(),e);
+        }
+        return status;
+    }
+
     /*public int getCategoryLike(int id)
     {
         QueryBuilder<Categories,Integer> categoryQB = getDbHelper().getCategoryDao().queryBuilder();
