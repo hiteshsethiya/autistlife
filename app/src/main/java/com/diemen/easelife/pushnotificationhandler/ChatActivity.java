@@ -71,8 +71,10 @@ public class ChatActivity extends Activity {
           newmessage.setFromName(c.getSender());
           newmessage.setMessage(c.getMessage());
           newmessage.setSelf(false);
-          appendMessage(newmessage);
+          showMessages(newmessage);
         }
+
+
 
 
 
@@ -91,7 +93,7 @@ public class ChatActivity extends Activity {
                 JSONObject data;
                 try {
                     ParseQuery pQuery=new ParseInstallation().getQuery();
-                    pQuery.whereEqualTo("phone",SenderPhone);
+                    pQuery.whereEqualTo("phone",ReceiverPhone);
                     ParsePush pushMessage=new ParsePush();
                     pushMessage.setQuery(pQuery);
                   data = new JSONObject("{\"alert\":\"New Message\",\"Message\": \""+chat.getMessage()+"\",\"ReceiverPhone\": \""+ReceiverPhone+"\",\"Sender\":\""+Sender+"\" ,\"SenderPhone\":\""+SenderPhone+"\",\"ReceivedOn\":\""+date.getTime()+"\"}");
@@ -122,6 +124,12 @@ public class ChatActivity extends Activity {
             }
         });
     }
+
+    private void showMessages(Message msg)
+    {
+      appendMessage(msg);
+    }
+
 
     @Override
     public void onBackPressed() {
