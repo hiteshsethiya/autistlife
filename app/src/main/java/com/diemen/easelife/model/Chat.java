@@ -12,6 +12,17 @@ public class Chat {
     @DatabaseField(generatedId = true)
     private int id;
 
+    public void setSelf(boolean isSelf) {
+        this.isSelf = isSelf;
+    }
+
+    public boolean isSelf() {
+        return isSelf;
+    }
+
+    @DatabaseField
+    private  boolean isSelf;
+
     @DatabaseField
     private String Sender;
 
@@ -88,7 +99,7 @@ public class Chat {
         Sender = sender;
     }
 
-    public Chat(int id, String sender, String senderPhone, String receiver, String receiverPhone, String message, Date receivedOn) {
+    public Chat(int id, String sender, String senderPhone, String receiver, String receiverPhone, String message, Date receivedOn,Boolean isself) {
         this.id = id;
         Sender = sender;
         SenderPhone = senderPhone;
@@ -96,5 +107,6 @@ public class Chat {
         ReceiverPhone = receiverPhone;
         Message = message;
         ReceivedOn = receivedOn;
+        isSelf=isself;
     }
 }

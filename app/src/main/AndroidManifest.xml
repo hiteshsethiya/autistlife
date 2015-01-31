@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <permission android:protectionLevel="signature" android:name="com.diemen.easelife.easelife.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
 
     <application
@@ -59,7 +60,8 @@
             android:label="@string/app_name"></activity>
         <activity
             android:name=".SubcategoryActivity"
-            android:label="Sub Category" >
+            android:label="Sub Category"
+            android:parentActivityName=".StartActivity">
             <intent-filter>
                 <action android:name="com.diemen.easelife.easelife.SUBCATEGORYACTIVITY" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -69,6 +71,12 @@
         <activity
             android:name=".UserListActivity"
             android:label="Users" >
+
+        </activity>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings" >
 
         </activity>
 

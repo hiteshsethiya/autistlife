@@ -1,5 +1,7 @@
 package com.diemen.easelife.model;
 
+import java.io.File;
+
 /**
  * Created by tfs-hitesh on 24/1/15.
  */
@@ -16,4 +18,6 @@ public class EaseLifeConstants {
     public final static int REQUEST_CAMERA = 0;
     public final static int SELECT_FILE = 1;
 
+    public final static String imagesPath = File.separator
+            + "easelife" + File.separator + "images";
 }

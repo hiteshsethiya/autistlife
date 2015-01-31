@@ -73,7 +73,7 @@ public class StartActivity extends ActionBarActivity {
                     startActivity(addNewStuffIntent);
                     Toast.makeText(StartActivity.this,"Gand marlenge", Toast.LENGTH_SHORT).show();
                 }
-                finish();
+//                finish();
             }
         });
     }
@@ -100,6 +100,9 @@ public class StartActivity extends ActionBarActivity {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, PICK_CONTACT);
             return true;
+        }else if(id == R.id.action_settings){
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -134,7 +137,7 @@ public class StartActivity extends ActionBarActivity {
                             phones.close();
                         }
                         String name = cursor.getString(nameIdx);
-
+                        phoneNumber= phoneNumber.replace(" ","");
                         String Phone=phoneNumber.length()>10?phoneNumber.substring(phoneNumber.length()-10):phoneNumber;
 
                         if(name!="" && phoneNumber!="") {
@@ -144,7 +147,7 @@ public class StartActivity extends ActionBarActivity {
                         }
 
 
-                        Toast.makeText(getApplicationContext(),"name:"+name +" phone:"+phoneNumber,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"name:"+name +" phone:"+Phone,Toast.LENGTH_LONG).show();
                     }
                 }
                 break;

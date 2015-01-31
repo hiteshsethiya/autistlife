@@ -1,0 +1,30 @@
+<!--?xml version="1.0" encoding="utf-8"?-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="CONFIGURED USER">
+        <ListPreference
+            android:key="prefUser1"
+            android:summary="Click to Select User 1"
+            android:title="User 1"></ListPreference>
+
+        <ListPreference
+            android:key="prefUser2"
+            android:summary="Click to Select User 2."
+            android:title="User 2"></ListPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="UPDATE SETTINGS">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="prefShakeService"
+            android:title="Anxiety Detection"
+            android:summary="Select for Anxiety detection to be sent to Configured User"></CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="prefLocationService"
+            android:title="Location Detection"
+            android:summary="Select to send location to Configured User"></CheckBoxPreference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

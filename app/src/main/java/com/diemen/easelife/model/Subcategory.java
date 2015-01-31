@@ -37,7 +37,7 @@ public class Subcategory implements Parcelable {
     @DatabaseField
     private double longitude;
 
-    @DatabaseField(dataType = DataType.DATE_STRING, format = "yyyy-MM-dd hh:mm:ss")
+    @DatabaseField(dataType = DataType.DATE_STRING, format = "yyyy-MM-EEEE hh:mm:ss")
     private Date createdAt;
 
     @DatabaseField
