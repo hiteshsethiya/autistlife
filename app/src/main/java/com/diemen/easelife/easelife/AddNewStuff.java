@@ -28,12 +28,19 @@ import android.widget.Toast;
 import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.model.Subcategory;
+import com.diemen.easelife.sqllite.DBHelper;
+import com.diemen.easelife.sqllite.DBManager;
+import com.diemen.easelife.util.Util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by tfs-hitesh on 24/1/15.
@@ -46,11 +53,18 @@ public class AddNewStuff extends ActionBarActivity {
     private ImageButton selectImageBtn;
     private Categories newCategory = null;
     private Subcategory newSubcategory = null;
+    private String selectedImagePath;
     private String viewPlate;
     private AlertDialog dialog;
     private static Intent whereToGoBack;
     private static int IMG_WIDTH = 350;
     private static int IMG_HEiGHT = 350;
+
+    private String name;
+    private String description;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+    private int categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +89,7 @@ public class AddNewStuff extends ActionBarActivity {
             whereToGoBack = new Intent(this, SubcategoryActivity.class);
             newSubcategory = new Subcategory();
             newCategory = null;
+            categoryId = getIntent().getIntExtra("categoryId", 0);
         }
         else {
             viewPlate = "User";
@@ -89,11 +104,18 @@ public class AddNewStuff extends ActionBarActivity {
             public void onClick(View v) {
 
                 if (nameEditText.getText().toString().trim().length() < 2) {
-                    nameEditText.setBackgroundColor(getResources().getColor(R.color.red_color));
+                    Util.animateBackgroundColor(nameEditText, getResources().getColor(R.color.material_blue_grey_800), getResources().getColor(R.color.red_color));
+                    Util.animateBackgroundColor(nameEditText, getResources().getColor(R.color.red_color), getResources().getColor(R.color.white));
                     Toast.makeText(AddNewStuff.this,"Please enter a "+viewPlate+" name", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                if(selectedImagePath == null || selectedImagePath.length() == 0)
+                {
+                    Toast.makeText(AddNewStuff.this,"You haven't selected any image", Toast.LENGTH_SHORT).show();
+                }
+
+                save();
             }
         });
 
@@ -115,6 +137,7 @@ public class AddNewStuff extends ActionBarActivity {
                         Log.e("AddNewStuff","Item Clicked : "+position+" id: "+id);
 
                         if (position == 0) {
+
                             Intent intent = new Intent(
                                     Intent.ACTION_PICK,
                                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -125,8 +148,10 @@ public class AddNewStuff extends ActionBarActivity {
 
                         } else if (position == 1) {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            Date date = new Date();
+                            selectedImagePath = Long.toString(date.getTime());
                             File f = new File(android.os.Environment
-                                    .getExternalStorageDirectory(), "temp.jpg");
+                                    .getExternalStorageDirectory(),selectedImagePath);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                             startActivityForResult(intent, EaseLifeConstants.REQUEST_CAMERA);
                         } dialog.dismiss();
@@ -152,62 +177,47 @@ public class AddNewStuff extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("ActivyResult","***************************************");
-
+        Log.e("ActivityResult","***************************************");
+        Bitmap bm = null;
+        BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+        File requiredFile = null;
 
         if (resultCode == RESULT_OK) {
             if (requestCode == EaseLifeConstants.REQUEST_CAMERA) {
-                File f = new File(Environment.getExternalStorageDirectory()
+
+                requiredFile = new File(Environment.getExternalStorageDirectory()
                         .toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
+                for (File fileIterator : requiredFile.listFiles()) {
+                    if (fileIterator.getName().equals(selectedImagePath)) {
+                        requiredFile = fileIterator;
                         break;
                     }
                 }
-                try {
-                    Bitmap bm;
-                    BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
-
-                    bm = BitmapFactory.decodeFile(f.getAbsolutePath(),
-                            btmapOptions);
-
-                    bm = Bitmap.createScaledBitmap(bm, IMG_WIDTH,IMG_HEiGHT, true);
-                    selectImageBtn.setImageBitmap(bm);
-
-                    String path = android.os.Environment
-                            .getExternalStorageDirectory()
-                            + File.separator
-                            + "Phoenix" + File.separator + "default";
-                    f.delete();
-                    OutputStream fOut = null;
-                    File file = new File(path, String.valueOf(System
-                            .currentTimeMillis()) + ".jpg");
-                    try {
-                        fOut = new FileOutputStream(file);
-                        bm.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-                        Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path), 128, 128);
-                        fOut.flush();
-                        fOut.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    try
+                    {
+                        bm = BitmapFactory.decodeFile(requiredFile.getAbsolutePath(),
+                                btmapOptions);
+                        selectedImagePath = Uri.fromFile(requiredFile).toString();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (requestCode == EaseLifeConstants.SELECT_FILE) {
-                Uri selectedImageUri = data.getData();
+                    catch(Exception e)
+                    {
+                        Log.e("AddNewStuff","---- onActivityResult- Request Camera",e);
+                    }
 
+
+            } else if (requestCode == EaseLifeConstants.SELECT_FILE)
+            {
+                Uri selectedImageUri = data.getData();
                 String tempPath = getPath(selectedImageUri, AddNewStuff.this);
-                Bitmap bm;
-                BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+                selectedImagePath = selectedImageUri.toString();
+                requiredFile = new File(selectedImagePath);
                 bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
-                bm = Bitmap.createScaledBitmap(bm,IMG_WIDTH,IMG_HEiGHT,true);
-                selectImageBtn.setImageBitmap(bm);
+            }
+            bm = Bitmap.createScaledBitmap(bm,IMG_WIDTH,IMG_HEiGHT,true);
+            selectImageBtn.setImageBitmap(bm);
+            saveImage(requiredFile);
+            if(requiredFile != null) {
+                requiredFile.delete();
             }
         }
     }
@@ -228,9 +238,58 @@ public class AddNewStuff extends ActionBarActivity {
         finish();
     }
 
-
-    private static void save()
+    public void saveImage(File sourceFile)
     {
+        String path = android.os.Environment
+                .getExternalStorageDirectory()
+                + EaseLifeConstants.imagesPath;
+
+        OutputStream fOut = null;
+        File newFile = new File(path, String.valueOf(System
+                .currentTimeMillis()) + ".jpg");
+        selectedImagePath = newFile.getAbsolutePath();
+        try {
+            if(!newFile.exists())
+            {
+                newFile.getParentFile().mkdirs();
+            }
+
+            InputStream in = new FileInputStream(sourceFile);
+            fOut = new FileOutputStream(newFile);
+
+            // Transfer bytes from in to out
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                fOut.write(buf, 0, len);
+            }
+            in.close();
+            fOut.flush();
+            fOut.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void save()
+    {
+        if(newCategory != null)
+        {
+            DBManager.getInstance().saveCategory(
+                    new Categories(name,selectedImagePath,true,0,description)
+            );
+        }
+        else if(newSubcategory != null)
+        {
+            DBManager.getInstance().saveSubCategory(
+                    new Subcategory(categoryId, name,selectedImagePath, latitude, longitude,new Date(),true,description,0)
+            );
+        }
 
     }
 }

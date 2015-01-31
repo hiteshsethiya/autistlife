@@ -1,6 +1,8 @@
 package com.diemen.easelife.easelife;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.sqllite.DBManager;
 import com.diemen.easelife.util.Util;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -80,7 +83,22 @@ public class CategoriesImageAdapter extends BaseAdapter{
                 if (imageResourcePath != null && Util.isInteger(imageResourcePath)) {
                     //set image path from Picaso
                     imageView.setImageResource(categoriesThumbHM.get(Integer.parseInt(categoriesList.get(position).getImageResourcePath())));
-                } else {
+                }
+                else if(imageResourcePath != null)
+                {
+                    File imageFile = new File(imageResourcePath);
+
+                    if(imageFile.exists())
+                    {
+                        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                        bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getWidth(),imageView.getHeight(),true);
+                        imageView.setImageBitmap(bitmap);
+                    }
+                    else {
+                        imageView.setImageResource(categoriesThumbHM.get(0));
+                    }
+                }
+                else {
                     imageView.setImageResource(categoriesThumbHM.get(0));
                 }
             }
