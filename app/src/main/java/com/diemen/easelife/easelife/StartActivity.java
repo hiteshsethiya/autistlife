@@ -60,6 +60,7 @@ public class StartActivity extends ActionBarActivity {
                 if(updateCategoryLike != null) {
                     updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
                     DBManager.getInstance().updateCategoryLike(updateCategoryLike);
+
                     //Move to subcategory event
                     Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
                     subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
