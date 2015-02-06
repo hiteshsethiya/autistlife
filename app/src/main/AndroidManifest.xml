@@ -15,6 +15,8 @@
     <permission android:protectionLevel="signature" android:name="com.diemen.easelife.easelife.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+
 
 
     <application
@@ -24,6 +26,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <service android:name="com.parse.PushService" />
+        <service android:name="com.diemen.easelife.pushnotificationhandler.MyService"/>
         <receiver android:name="com.parse.ParseBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

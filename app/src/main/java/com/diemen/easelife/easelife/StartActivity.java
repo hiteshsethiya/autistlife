@@ -1,7 +1,6 @@
 package com.diemen.easelife.easelife;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,12 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -29,45 +24,34 @@ import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.model.User;
 import com.diemen.easelife.sqllite.DBManager;
-
-
-import java.util.List;
-
+import com.parse.Parse;
+import com.parse.ParseInstallation;
 
 
 public class StartActivity extends ActionBarActivity {
 
     GridView categoriesGridView;
-    Button addButton;
     User AddUser=new User();
-    List<Categories> list;
-    CategoriesImageAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_start);
-            DBManager.init(this);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_start);
+        DBManager.init(this);
 
-            categoriesGridView = (GridView) findViewById(R.id.categories_grid);
-            addButton = (Button)findViewById(R.id.add_btn);
-
-            list = DBManager.getInstance().getAllCategories();
-            adapter = new CategoriesImageAdapter(this,list);
-
-            categoriesGridView.setAdapter(adapter);
-
+        ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_start,null); // R.layout. Name of the XML file to be associated with this class
+        categoriesGridView = (GridView) findViewById(R.id.categories_grid);
+        categoriesGridView.setAdapter(new CategoriesImageAdapter(this));
         }
         catch (Exception e)
         {
             Log.e(StartActivity.class.getName(), "Error in StartActivity ", e);
         }
-
+    //    setContentView(contentView);
         categoriesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                adapter.notifyDataSetChanged();
                 RelativeLayout linearLayout = (RelativeLayout)view;
                 ImageView clickedImageView = (ImageView)linearLayout.getChildAt(0);
 
@@ -76,7 +60,7 @@ public class StartActivity extends ActionBarActivity {
                 if(updateCategoryLike != null) {
                     updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
                     DBManager.getInstance().updateCategoryLike(updateCategoryLike);
-                    Toast.makeText(StartActivity.this,updateCategoryLike.getDescription(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StartActivity.this,updateCategoryLike.getDescription() +" Likes:"+updateCategoryLike.getLikes(), Toast.LENGTH_SHORT).show();
                     //Move to subcategory event
                     Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
                     subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
@@ -87,18 +71,9 @@ public class StartActivity extends ActionBarActivity {
                     Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
                     addNewStuffIntent.putExtra("object", EaseLifeConstants.CATEGORIES_OBJECT);
                     startActivity(addNewStuffIntent);
+                    Toast.makeText(StartActivity.this,"Gand marlenge", Toast.LENGTH_SHORT).show();
                 }
-                finish();
-            }
-        });
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adapter.notifyDataSetChanged();
-                Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
-                addNewStuffIntent.putExtra("object", EaseLifeConstants.CATEGORIES_OBJECT);
-                startActivity(addNewStuffIntent);
-                finish();
+//                finish();
             }
         });
     }

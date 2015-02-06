@@ -138,8 +138,17 @@ public class DBManager {
     public List<Chat> getAllChats(String Sender,String Receiver)
     {
         try{
-            List<Chat> list =getDbHelper().getChatDao().queryForEq("SenderPhone",Sender);
-            return list;
+            List<Chat> Senderlist =getDbHelper().getChatDao().queryForEq("SenderPhone",Sender);
+            List<Chat> AllChat=new ArrayList<Chat>();
+
+
+            for(Chat s:Senderlist)
+            {
+                if(s.getReceiverPhone().equals(Receiver.toString()))
+                    AllChat.add(s);
+            }
+
+            return AllChat;
         }
         catch (SQLException e){
             Log.e(DBManager.class.getName(),"Get all chats ",e);

@@ -49,8 +49,5 @@ public class PushBroadcastReceiver extends ParsePushBroadcastReceiver{
         context.startActivity(i);
     }
 
-    @Override
-    protected void onPushReceive(Context context, Intent intent) {
-        super.onPushReceive(context, intent);
-    }
+
 }

@@ -71,7 +71,12 @@ public class ChatActivity extends ActionBarActivity {
           Message newmessage=new Message();
           newmessage.setFromName(c.getSender());
           newmessage.setMessage(c.getMessage());
-
+/*
+<<<<<<< HEAD
+          newmessage.setSelf(false);
+          showMessages(newmessage);
+*/
+// till here
           newmessage.setSelf(c.isSelf());
           appendMessage(newmessage);
 
@@ -85,7 +90,30 @@ public class ChatActivity extends ActionBarActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+/*head
+                ParseUser currentUser=ParseUser.getCurrentUser();
+                Chat chat=new Chat();
+                chat.setMessage(inputMsg.getText().toString());
+                Date date=new Date();
+                date.getTime();
 
+
+              //  pushMessage.setMessage(message.getText().toString());
+                JSONObject data;
+                try {
+                    ParseQuery pQuery=new ParseInstallation().getQuery();
+                    pQuery.whereEqualTo("phone",ReceiverPhone);
+                    ParsePush pushMessage=new ParsePush();
+                    pushMessage.setQuery(pQuery);
+                  data = new JSONObject("{\"alert\":\"New Message\",\"Message\": \""+chat.getMessage()+"\",\"ReceiverPhone\": \""+ReceiverPhone+"\",\"Sender\":\""+Sender+"\" ,\"SenderPhone\":\""+SenderPhone+"\",\"ReceivedOn\":\""+date.getTime()+"\"}");
+                  pushMessage.setMessage("Anuj");
+                  pushMessage.setData(data);
+                  pushMessage.sendInBackground();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+till here*/
                 String message = inputMsg.getText().toString();
                 if (message != null && !message.isEmpty()) {
                     ParseUser currentUser = ParseUser.getCurrentUser();

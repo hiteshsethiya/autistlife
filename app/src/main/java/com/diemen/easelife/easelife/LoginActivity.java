@@ -83,12 +83,10 @@ public class LoginActivity extends ActionBarActivity {
                     user.setUsername(Name);
                     user.setPassword(PhoneNo);
                     user.put("PhoneNumber",PhoneNo);
-                    PushInit.setPhoneNo(PhoneNo);
+                    PushInit.setPhoneNo(PhoneNo,Name);
                     user.signUpInBackground(new SignUpCallback() {
                         public void done(com.parse.ParseException e) {
                             if (e == null) {
-                                ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
-                                currentInstall.put("phone",PhoneNo);
                                 Intent i = new Intent(getApplicationContext(), StartActivity.class);
                                 startActivity(i);
                                 finish();

@@ -11,6 +11,7 @@ import com.diemen.easelife.model.Subcategory;
 import com.diemen.easelife.model.User;
 import com.diemen.easelife.pushnotificationhandler.ChatActivity;
 import com.diemen.easelife.sqllite.DBManager;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -42,14 +43,15 @@ public class UserListActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
                 User user=mList.get(position);
                 Intent gotoChat;
                 ParseUser currentUser=ParseUser.getCurrentUser();
                 gotoChat = new Intent(getApplicationContext(), ChatActivity.class);
-                gotoChat.putExtra("Receiver",user.getName());
-                gotoChat.putExtra("ReceiverPhone",user.getPhoneNo());
-                gotoChat.putExtra("SenderPhone",currentUser.getString("PhoneNumber"));
-                gotoChat.putExtra("Sender",currentUser.getUsername());
+                gotoChat.putExtra("Receiver",currentUser.getUsername());
+                gotoChat.putExtra("ReceiverPhone", currentUser.getString("PhoneNumber"));
+                gotoChat.putExtra("SenderPhone", user.getPhoneNo());
+                gotoChat.putExtra("Sender", user.getName());
                 startActivity(gotoChat);
                 finish();
             }
