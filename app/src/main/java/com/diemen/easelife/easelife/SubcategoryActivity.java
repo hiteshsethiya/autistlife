@@ -42,7 +42,7 @@ public class SubcategoryActivity extends ActionBarActivity{
 
         categoryId = getIntent().getIntExtra("categoryId",1);
         List<Subcategory> subcategoryList = DBManager.getInstance().getSubcategoryByCategoryId(categoryId);
-        Toast.makeText(SubcategoryActivity.this," Likes:"+categoryId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(SubcategoryActivity.this," Likes:"+categoryId, Toast.LENGTH_SHORT).show();
 
 
         subcategoryGridView = (GridView) findViewById(R.id.subcategory_grid);
@@ -63,7 +63,7 @@ public class SubcategoryActivity extends ActionBarActivity{
                     Toast.makeText(SubcategoryActivity.this,updateCategoryLike.getDescription() +" Likes:"+updateCategoryLike.getLikes(), Toast.LENGTH_SHORT).show();
                 }
                 //Move to subcategory event
-                Toast.makeText(SubcategoryActivity.this,"Like "+updateCategoryLike.getLikes() + 1,Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(SubcategoryActivity.this,"Like "+updateCategoryLike.getLikes() + 1,Toast.LENGTH_SHORT).show();
                 Intent userList = new Intent(getApplicationContext(),UserListActivity.class);
                 startActivity(userList);
                 finish();

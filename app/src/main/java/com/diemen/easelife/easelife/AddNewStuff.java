@@ -78,10 +78,11 @@ public class AddNewStuff extends ActionBarActivity {
         }
         else if (whichClass == EaseLifeConstants.SUB_CATEGORIES_OBJECT) {
             viewPlate = "Sub Category";
+            categoryId = getIntent().getIntExtra("categoryId", 1);
             whereToGoBack = new Intent(this, SubcategoryActivity.class);
+            whereToGoBack.putExtra("categoryId",categoryId);
             newSubcategory = new Subcategory();
             newCategory = null;
-            categoryId = getIntent().getIntExtra("categoryId", 1);
         }
         else {
             viewPlate = "User";
@@ -299,10 +300,6 @@ public class AddNewStuff extends ActionBarActivity {
 
     public void goBack()
     {
-        if(name != null && name.length() > 0)
-        {
-            CategoriesImageAdapter.notifyDataSetChangeIdentifier++;
-        }
         startActivity(whereToGoBack);
         finish();
     }
