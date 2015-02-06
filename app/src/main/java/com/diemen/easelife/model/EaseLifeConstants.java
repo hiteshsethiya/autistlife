@@ -18,6 +18,9 @@ public class EaseLifeConstants {
     public final static int REQUEST_CAMERA = 0;
     public final static int SELECT_FILE = 1;
 
+    public final static String ERROR_SELECTING_IMAGE = "Sorry! Could not save image";
     public final static String imagesPath = File.separator
-            + "easelife" + File.separator + "images";
+            + "easelife/";
+
+    public final static String ADD_CATEGORY = "Add Category";
 }

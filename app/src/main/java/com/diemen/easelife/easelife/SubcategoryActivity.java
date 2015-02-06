@@ -8,14 +8,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.model.Subcategory;
 import com.diemen.easelife.sqllite.DBManager;
+
+import java.util.List;
 
 /**
  * Created by tfs-hitesh on 11/1/15.
@@ -23,6 +28,8 @@ import com.diemen.easelife.sqllite.DBManager;
 public class SubcategoryActivity extends ActionBarActivity{
 
      GridView subcategoryGridView;
+     Button addButton;
+    Integer categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +37,16 @@ public class SubcategoryActivity extends ActionBarActivity{
         setContentView(R.layout.activity_subcategory_grid);
 
         ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_subcategory_grid,null);
+        addButton = (Button)findViewById(R.id.add_btn);
 
-        subcategoryGridView = (GridView) findViewById(R.id.subcategory_grid);
-        Integer categoryId = getIntent().getIntExtra("categoryId",1);
+
+        categoryId = getIntent().getIntExtra("categoryId",1);
+        List<Subcategory> subcategoryList = DBManager.getInstance().getSubcategoryByCategoryId(categoryId);
         Toast.makeText(SubcategoryActivity.this," Likes:"+categoryId, Toast.LENGTH_SHORT).show();
 
-        subcategoryGridView.setAdapter(new SubcategoryImageAdapter(this,categoryId));
+
+        subcategoryGridView = (GridView) findViewById(R.id.subcategory_grid);
+        subcategoryGridView.setAdapter(new SubcategoryImageAdapter(this,categoryId,subcategoryList));
 
         subcategoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,15 +69,26 @@ public class SubcategoryActivity extends ActionBarActivity{
                 finish();
             }
         });
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
+                addNewStuffIntent.putExtra("object", EaseLifeConstants.SUB_CATEGORIES_OBJECT);
+                addNewStuffIntent.putExtra("categoryId",categoryId);
+                startActivity(addNewStuffIntent);
+                finish();
+            }
+        });
     }
 
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        Intent i=new Intent(this, StartActivity.class);
-//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(i);
+     Intent i=new Intent(this, StartActivity.class);
+      i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
         finish();
     }
 

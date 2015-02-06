@@ -1,8 +1,10 @@
 package com.diemen.easelife.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.diemen.easelife.sqllite.DBManager;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -181,5 +183,10 @@ public class Subcategory implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this);
+    }
+
+    public boolean save(Context context)
+    {
+        return DBManager.getInstance(context).saveSubCategory(this);
     }
 }

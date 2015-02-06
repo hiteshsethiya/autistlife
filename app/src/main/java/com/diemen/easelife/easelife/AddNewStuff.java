@@ -6,40 +6,32 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.model.Subcategory;
-import com.diemen.easelife.sqllite.DBHelper;
 import com.diemen.easelife.sqllite.DBManager;
 import com.diemen.easelife.util.Util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
+import java.nio.channels.FileChannel;
 import java.util.Date;
 
 /**
@@ -58,7 +50,7 @@ public class AddNewStuff extends ActionBarActivity {
     private AlertDialog dialog;
     private static Intent whereToGoBack;
     private static int IMG_WIDTH = 350;
-    private static int IMG_HEiGHT = 350;
+    private static int IMG_HEIGHT = 350;
 
     private String name;
     private String description;
@@ -89,7 +81,7 @@ public class AddNewStuff extends ActionBarActivity {
             whereToGoBack = new Intent(this, SubcategoryActivity.class);
             newSubcategory = new Subcategory();
             newCategory = null;
-            categoryId = getIntent().getIntExtra("categoryId", 0);
+            categoryId = getIntent().getIntExtra("categoryId", 1);
         }
         else {
             viewPlate = "User";
@@ -114,8 +106,11 @@ public class AddNewStuff extends ActionBarActivity {
                 {
                     Toast.makeText(AddNewStuff.this,"You haven't selected any image", Toast.LENGTH_SHORT).show();
                 }
-
+                name = nameEditText.getText().toString().trim();
+                description = descriptionEditText.getText().toString().trim();
                 save();
+                Toast.makeText(AddNewStuff.this,"Added a new "+viewPlate, Toast.LENGTH_SHORT).show();
+                goBack();
             }
         });
 
@@ -180,45 +175,72 @@ public class AddNewStuff extends ActionBarActivity {
         Log.e("ActivityResult","***************************************");
         Bitmap bm = null;
         BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+        btmapOptions.inSampleSize = 2;
         File requiredFile = null;
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == EaseLifeConstants.REQUEST_CAMERA) {
+        try {
+            if (resultCode == RESULT_OK) {
+                if (requestCode == EaseLifeConstants.REQUEST_CAMERA) {
 
-                requiredFile = new File(Environment.getExternalStorageDirectory()
-                        .toString());
-                for (File fileIterator : requiredFile.listFiles()) {
-                    if (fileIterator.getName().equals(selectedImagePath)) {
-                        requiredFile = fileIterator;
-                        break;
+                    requiredFile = new File(Environment.getExternalStorageDirectory()
+                            .toString());
+                    for (File fileIterator : requiredFile.listFiles()) {
+                        if (fileIterator.getName().equals(selectedImagePath)) {
+                            requiredFile = fileIterator;
+                            break;
+                        }
                     }
-                }
-                    try
-                    {
+                    try {
                         bm = BitmapFactory.decodeFile(requiredFile.getAbsolutePath(),
                                 btmapOptions);
                         selectedImagePath = Uri.fromFile(requiredFile).toString();
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("AddNewStuff","---- onActivityResult- Request Camera",e);
+                    } catch (Exception e) {
+                        Log.e("AddNewStuff", "---- onActivityResult- Request Camera", e);
                     }
 
 
-            } else if (requestCode == EaseLifeConstants.SELECT_FILE)
-            {
-                Uri selectedImageUri = data.getData();
-                String tempPath = getPath(selectedImageUri, AddNewStuff.this);
-                selectedImagePath = selectedImageUri.toString();
-                requiredFile = new File(selectedImagePath);
-                bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
+                } else if (requestCode == EaseLifeConstants.SELECT_FILE) {
+                    Uri selectedImageUri = data.getData();
+                    String tempPath = getPath(selectedImageUri, AddNewStuff.this);
+                    selectedImagePath = tempPath;
+                    requiredFile = new File(selectedImagePath);
+                    bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
+                }
+                bm = Bitmap.createScaledBitmap(bm, IMG_WIDTH, IMG_HEIGHT, true);
+                selectImageBtn.setImageBitmap(bm);
+
+                //create a file to write bitmap data
+                File sd = Environment.getExternalStorageDirectory();
+                String fileName = "el"+String.valueOf(System.currentTimeMillis())+".jpg";
+
+                File destination= new File(sd+EaseLifeConstants.imagesPath, fileName);
+
+                destination.createNewFile();
+
+//Convert bitmap to byte array
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.JPEG, 10 , bos);
+                byte[] bitmapdata = bos.toByteArray();
+
+//write the bytes in file
+                FileOutputStream fos = new FileOutputStream(destination);
+                fos.write(bitmapdata);
+
+               // saveImage(requiredFile);
+               /* if(requiredFile != null)
+                {
+                    requiredFile.delete();
+                }*/
+                selectedImagePath = fileName;
+                fos.close();
             }
-            bm = Bitmap.createScaledBitmap(bm,IMG_WIDTH,IMG_HEiGHT,true);
-            selectImageBtn.setImageBitmap(bm);
-            saveImage(requiredFile);
-            if(requiredFile != null) {
-                requiredFile.delete();
-            }
+        }
+        catch(Exception e)
+        {
+            Log.e("AddNewStuff - activity result()"," Error - ",e);
+            Toast.makeText(AddNewStuff.this,EaseLifeConstants.ERROR_SELECTING_IMAGE,Toast.LENGTH_LONG).show();
+
         }
     }
 
@@ -234,62 +256,54 @@ public class AddNewStuff extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(whereToGoBack);
-        finish();
+        goBack();
     }
 
     public void saveImage(File sourceFile)
     {
-        String path = android.os.Environment
-                .getExternalStorageDirectory()
-                + EaseLifeConstants.imagesPath;
-
-        OutputStream fOut = null;
-        File newFile = new File(path, String.valueOf(System
-                .currentTimeMillis()) + ".jpg");
-        selectedImagePath = newFile.getAbsolutePath();
         try {
-            if(!newFile.exists())
-            {
-                newFile.getParentFile().mkdirs();
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+            if (sd.canWrite()) {
+                String fileName = "el"+String.valueOf(System.currentTimeMillis())+".jpg";
+                File destination= new File(sd+EaseLifeConstants.imagesPath, fileName);
+                if (sourceFile.exists()) {
+                    FileChannel src = new FileInputStream(sourceFile).getChannel();
+                    FileChannel dst = new FileOutputStream(destination).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                }
+                selectedImagePath = fileName;
             }
-
-            InputStream in = new FileInputStream(sourceFile);
-            fOut = new FileOutputStream(newFile);
-
-            // Transfer bytes from in to out
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                fOut.write(buf, 0, len);
-            }
-            in.close();
-            fOut.flush();
-            fOut.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("AddNewStuff - save image()"," Error - ",e);
         }
-
     }
 
     private void save()
     {
         if(newCategory != null)
         {
-            DBManager.getInstance().saveCategory(
-                    new Categories(name,selectedImagePath,true,0,description)
-            );
+            newCategory = new Categories(name,selectedImagePath,true,0,description);
+            newCategory.save(this);
         }
         else if(newSubcategory != null)
         {
-            DBManager.getInstance().saveSubCategory(
-                    new Subcategory(categoryId, name,selectedImagePath, latitude, longitude,new Date(),true,description,0)
-            );
+            newSubcategory = new Subcategory(categoryId, name,selectedImagePath, latitude, longitude,new Date(),true,description,0);
+            newSubcategory.save(this);
         }
 
+    }
+
+
+    public void goBack()
+    {
+        if(name != null && name.length() > 0)
+        {
+            CategoriesImageAdapter.notifyDataSetChangeIdentifier++;
+        }
+        startActivity(whereToGoBack);
+        finish();
     }
 }

@@ -41,4 +41,5 @@
     <color name="btn_border">@color/trans</color>
     <color name="btn_txt_pressed">#000000</color>
     <color name="btn_txt_color">#FFFFFF</color>
+    <color name="lightest_blue">#ADDAEA</color>
 </resources>

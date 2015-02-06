@@ -31,6 +31,16 @@ public class DBManager {
     }
 
     static public DBManager getInstance() {
+
+        return dbManager;
+    }
+
+    static public DBManager getInstance(Context context) {
+
+        if(dbManager == null)
+        {
+            init(context);
+        }
         return dbManager;
     }
 

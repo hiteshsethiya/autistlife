@@ -1,6 +1,7 @@
 package com.diemen.easelife.model;
 
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -159,8 +160,8 @@ public class Categories implements Parcelable{
         }
     };
 
-    public boolean save(Categories categories)
+    public boolean save(Context context)
     {
-        return DBManager.getInstance().saveCategory(categories);
+        return DBManager.getInstance(context).saveCategory(this);
     }
 }
