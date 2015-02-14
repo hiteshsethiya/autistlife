@@ -5,14 +5,6 @@
      >
 
     <!-- MORE LAYOUTS IF YOU WANT -->
-
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:layout_above="@+id/add_btn"
-    >
-
     <GridView
         android:id="@+id/categories_grid"
         android:layout_width="match_parent"
@@ -27,20 +19,8 @@
         android:verticalSpacing="15dp"
         android:layout_alignParentLeft="false"
         android:layout_alignParentStart="true"
+
         >
 
     </GridView>
-</RelativeLayout>
-
-    <Button
-        android:id="@+id/add_btn"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:padding="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentBottom="true"
-        style="@style/btn"
-        android:text="Add Category"
-        />
 </RelativeLayout>

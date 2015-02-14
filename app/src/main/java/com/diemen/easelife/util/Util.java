@@ -2,13 +2,16 @@ package com.diemen.easelife.util;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.view.animation.Animation;
 import android.widget.EditText;
+import android.widget.GridView;
 
 /**
  * Created by tfs-hitesh on 11/1/15.
  */
 public class Util {
 
+    private static int tapdone = 0;
     public static boolean isInteger(String value)
     {
         boolean status = false;
@@ -38,5 +41,38 @@ public class Util {
 
         });
         colorAnimation.start();
+    }
+
+    public static void animateIngridView(GridView gridView,Animation animation)
+    {
+        int length = gridView.getCount();
+
+        if(gridView == null || animation == null)
+        {
+            return;
+        }
+
+        tapdone++;
+        if (tapdone == 1) {
+            startAnimations(length,gridView,animation);
+
+        } else if(tapdone == 2){
+            stopAnimations(length,gridView,null);
+            tapdone = 0;
+
+        }
+    }
+
+    private static void startAnimations(int length,GridView gridView,Animation animation)
+    {
+        for(int i = 0; i < length; ++i) {
+            gridView.getChildAt(i).startAnimation(animation);
+        }
+    }
+    private static void stopAnimations(int length,GridView gridView,Animation animation)
+    {
+        for(int i = 0; i < length; ++i) {
+            gridView.getChildAt(i).setAnimation(animation);
+        }
     }
 }

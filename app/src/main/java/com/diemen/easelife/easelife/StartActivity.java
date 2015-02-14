@@ -1,27 +1,21 @@
 package com.diemen.easelife.easelife;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.Adapter;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -29,6 +23,7 @@ import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.model.User;
 import com.diemen.easelife.sqllite.DBManager;
+import com.diemen.easelife.util.Util;
 
 
 import java.util.List;
@@ -38,10 +33,11 @@ import java.util.List;
 public class StartActivity extends ActionBarActivity {
 
     GridView categoriesGridView;
-    Button addButton;
     User AddUser=new User();
     List<Categories> list;
     CategoriesImageAdapter adapter;
+    Animation shakeImages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
@@ -50,57 +46,51 @@ public class StartActivity extends ActionBarActivity {
             DBManager.init(this);
 
             categoriesGridView = (GridView) findViewById(R.id.categories_grid);
-            addButton = (Button)findViewById(R.id.add_btn);
 
             list = DBManager.getInstance().getAllCategories();
             adapter = new CategoriesImageAdapter(this,list);
 
             categoriesGridView.setAdapter(adapter);
 
+            shakeImages = AnimationUtils.loadAnimation(this,R.anim.shakeimage);
+
+            categoriesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    RelativeLayout linearLayout = (RelativeLayout)view;
+                    ImageView clickedImageView = (ImageView)linearLayout.getChildAt(0);
+
+                    Categories updateCategoryLike = (Categories)clickedImageView.getTag();
+
+                    if(updateCategoryLike != null) {
+
+                        if(clickedImageView.getAnimation() != null)
+                        {
+                         //go to edit activity
+                        }
+                        //Toast.makeText(StartActivity.this,updateCategoryLike.getDescription(), Toast.LENGTH_SHORT).show();
+                        //Move to subcategory event
+                        updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
+                        DBManager.getInstance().updateCategoryLike(updateCategoryLike);
+                        Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
+                        subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
+                        startActivity(subCategoryMove);
+                    }
+                    else
+                    {
+                        Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
+                        addNewStuffIntent.putExtra("object", EaseLifeConstants.CATEGORIES_OBJECT);
+                        startActivity(addNewStuffIntent);
+                    }
+                    finish();
+                }
+            });
         }
         catch (Exception e)
         {
             Log.e(StartActivity.class.getName(), "Error in StartActivity ", e);
         }
-
-        categoriesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                adapter.notifyDataSetChanged();
-                RelativeLayout linearLayout = (RelativeLayout)view;
-                ImageView clickedImageView = (ImageView)linearLayout.getChildAt(0);
-
-                Categories updateCategoryLike = (Categories)clickedImageView.getTag();
-
-                if(updateCategoryLike != null) {
-                    updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
-                    DBManager.getInstance().updateCategoryLike(updateCategoryLike);
-                    Toast.makeText(StartActivity.this,updateCategoryLike.getDescription(), Toast.LENGTH_SHORT).show();
-                    //Move to subcategory event
-                    Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
-                    subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
-                    startActivity(subCategoryMove);
-                }
-                else
-                {
-                    Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
-                    addNewStuffIntent.putExtra("object", EaseLifeConstants.CATEGORIES_OBJECT);
-                    startActivity(addNewStuffIntent);
-                }
-                finish();
-            }
-        });
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adapter.notifyDataSetChanged();
-                Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
-                addNewStuffIntent.putExtra("object", EaseLifeConstants.CATEGORIES_OBJECT);
-                startActivity(addNewStuffIntent);
-                finish();
-            }
-        });
     }
 
 
@@ -121,7 +111,11 @@ public class StartActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_new) {
+        if(id == R.id.edit_category)
+        {
+            Util.animateIngridView(categoriesGridView, shakeImages);
+        }
+        else if (id == R.id.action_new) {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, PICK_CONTACT);
             return true;
@@ -178,6 +172,7 @@ public class StartActivity extends ActionBarActivity {
                 break;
         }
     }
+
     /* About XML inflator
     XML Layouts in Android need to be Inflated (parsed into View objects) before they are used. getLayoutInflator() gets you an instance of the LayoutInflator that will allow you to manually inflate layouts for specific uses.
 

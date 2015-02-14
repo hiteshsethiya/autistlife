@@ -55,7 +55,7 @@ public class CategoriesImageAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return categoriesList.size();
+        return categoriesList.size()+1;
     }
 
     @Override
@@ -85,32 +85,33 @@ public class CategoriesImageAdapter extends BaseAdapter{
         {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.textView.setText(categoriesList.get(position).getCategoryName());
-        String imageName = categoriesList.get(position).getImageResourcePath();
+        if(position != categoriesList.size()) {
+            holder.textView.setText(categoriesList.get(position).getCategoryName());
+            String imageName = categoriesList.get(position).getImageResourcePath();
 
-        if(imageName != null)
-        {
-            if(Util.isInteger(imageName))
-            {
-                holder.imageView.setImageResource(
-                        categoriesThumbHM.get(Integer.parseInt(imageName)));
+            if (imageName != null) {
+                if (Util.isInteger(imageName)) {
+                    holder.imageView.setImageResource(
+                            categoriesThumbHM.get(Integer.parseInt(imageName)));
+                } else {
+                    File sd = Environment.getExternalStorageDirectory();
+                    File image = new File(sd + EaseLifeConstants.imagesPath, imageName);
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+                    //  bitmap = Bitmap.createScaledBitmap(bitmap,350
+                    //,parent.getHeight(),true);
+                    holder.imageView.setImageBitmap(bitmap);
+                }
+            } else {
+                holder.imageView.setImageResource(R.drawable.imagenotselected);
             }
-            else
-            {
-                File sd = Environment.getExternalStorageDirectory();
-                File image = new File(sd+EaseLifeConstants.imagesPath, imageName);
-                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
-              //  bitmap = Bitmap.createScaledBitmap(bitmap,350
-                //,parent.getHeight(),true);
-                holder.imageView.setImageBitmap(bitmap);
-            }
+            holder.imageView.setTag(categoriesList.get(position));
         }
         else
         {
-            holder.imageView.setImageResource(R.drawable.imagenotselected);
+            holder.imageView.setImageResource(R.drawable.add_category);
+            holder.textView.setText("Add Category");
         }
-        holder.imageView.setTag(categoriesList.get(position));
         return convertView;
 
     }
