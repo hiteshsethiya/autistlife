@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.diemen.easelife.sqllite.DBManager;
 import com.diemen.easelife.util.Util;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -58,30 +60,31 @@ public class StartActivity extends ActionBarActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    RelativeLayout linearLayout = (RelativeLayout)view;
-                    ImageView clickedImageView = (ImageView)linearLayout.getChildAt(0);
+                    RelativeLayout relative = (RelativeLayout)view;
+                    ImageView clickedImageView = (ImageView)relative.getChildAt(0);
 
                     Categories updateCategoryLike = (Categories)clickedImageView.getTag();
 
-                    if(updateCategoryLike != null) {
+                    if(updateCategoryLike != null && relative.getAnimation() == null) {
 
-                        if(clickedImageView.getAnimation() != null)
-                        {
                          //go to edit activity
-                        }
-                        //Toast.makeText(StartActivity.this,updateCategoryLike.getDescription(), Toast.LENGTH_SHORT).show();
-                        //Move to subcategory event
-                        updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
-                        DBManager.getInstance().updateCategoryLike(updateCategoryLike);
-                        Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
-                        subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
-                        startActivity(subCategoryMove);
+                            //Toast.makeText(StartActivity.this,updateCategoryLike.getDescription(), Toast.LENGTH_SHORT).show();
+                            //Move to subcategory event
+                            updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
+                            DBManager.getInstance().updateCategoryLike(updateCategoryLike);
+                            Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
+                            subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
+                            startActivity(subCategoryMove);
                     }
                     else
                     {
                         Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
-                        addNewStuffIntent.putExtra("object", EaseLifeConstants.CATEGORIES_OBJECT);
-                        startActivity(addNewStuffIntent);
+                        if(relative.getAnimation() != null)
+                        {
+                            addNewStuffIntent.putExtra(EaseLifeConstants.PARCELABLE_OBJECT,updateCategoryLike);
+                        }
+                            addNewStuffIntent.putExtra("object", EaseLifeConstants.CATEGORIES_OBJECT);
+                            startActivity(addNewStuffIntent);
                     }
                     finish();
                 }

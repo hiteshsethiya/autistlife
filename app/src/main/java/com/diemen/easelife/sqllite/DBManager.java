@@ -72,6 +72,7 @@ public class DBManager {
         try
         {
             QueryBuilder<Categories,Integer> queryBuilder = getDbHelper().getCategoryDao().queryBuilder();
+            queryBuilder.where().eq(Categories.ACTIVE_COLUMN_NAME,true);
             queryBuilder.orderBy(Categories.LIKES_COLUMN_NAME,false);
 
             categories = queryBuilder.query();

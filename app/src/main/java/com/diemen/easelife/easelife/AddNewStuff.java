@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -51,7 +52,7 @@ public class AddNewStuff extends ActionBarActivity {
     private static Intent whereToGoBack;
     private static int IMG_WIDTH = 350;
     private static int IMG_HEIGHT = 350;
-
+    private boolean isEdit = false;
     private String name;
     private String description;
     private double latitude = 0.0;
@@ -73,8 +74,15 @@ public class AddNewStuff extends ActionBarActivity {
         if (whichClass == EaseLifeConstants.CATEGORIES_OBJECT) {
             viewPlate = "Category";
             whereToGoBack = new Intent(this, StartActivity.class);
-            newCategory = new Categories();
-            newSubcategory = null;
+            newCategory = getIntent().getParcelableExtra(EaseLifeConstants.PARCELABLE_OBJECT);
+            if(newCategory == null)
+            {
+                newCategory = new Categories();
+            }
+            else
+            {
+                setDetails();
+            }
         }
         else if (whichClass == EaseLifeConstants.SUB_CATEGORIES_OBJECT) {
             viewPlate = "Subcategory";
@@ -82,8 +90,6 @@ public class AddNewStuff extends ActionBarActivity {
             whereToGoBack = new Intent(this, SubcategoryActivity.class);
             whereToGoBack.putExtra("categoryId",categoryId);
             newSubcategory = new Subcategory();
-            newCategory = null;
-
         }
         else {
             viewPlate = "User";
@@ -91,7 +97,8 @@ public class AddNewStuff extends ActionBarActivity {
         }
         nameEditText.setHint(viewPlate + " Name");
         descriptionEditText.setHint(viewPlate + " Description");
-        addButton.setText("Add " + viewPlate);
+        viewPlate = isEdit == true ? "Save "+viewPlate : "Add "+viewPlate;
+        addButton.setText(viewPlate);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,15 +110,15 @@ public class AddNewStuff extends ActionBarActivity {
                     Toast.makeText(AddNewStuff.this,"Please enter a "+viewPlate+" name", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if(selectedImagePath == null || selectedImagePath.length() == 0)
                 {
                     Toast.makeText(AddNewStuff.this,"You haven't selected any image", Toast.LENGTH_SHORT).show();
                 }
                 name = nameEditText.getText().toString().trim();
                 description = descriptionEditText.getText().toString().trim();
+
                 save();
-                Toast.makeText(AddNewStuff.this,"Added a new "+viewPlate, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(AddNewStuff.this,"Added a new "+viewPlate, Toast.LENGTH_SHORT).show();
                 goBack();
             }
         });
@@ -166,10 +173,25 @@ public class AddNewStuff extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu, menu);
+        if(true) {
+            getMenuInflater().inflate(R.menu.menu_add_new_stuff, menu);
+        }
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /*
+        Get the id of the item that has been clicked and call events
+         */
+
+        int id = item.getItemId();
+        if(id == R.id.delete_action)
+        {
+            //The user has chosen to delete an entity - entity{categories}
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -240,7 +262,7 @@ public class AddNewStuff extends ActionBarActivity {
         }
         catch(Exception e)
         {
-            Log.e("AddNewStuff - activity result()"," Error - ",e);
+            Log.e("AddNewStuff"," activity result() Error - ",e);
             Toast.makeText(AddNewStuff.this,EaseLifeConstants.ERROR_SELECTING_IMAGE,Toast.LENGTH_LONG).show();
 
         }
@@ -261,33 +283,20 @@ public class AddNewStuff extends ActionBarActivity {
         goBack();
     }
 
-    public void saveImage(File sourceFile)
-    {
-        try {
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
-            if (sd.canWrite()) {
-                String fileName = "el"+String.valueOf(System.currentTimeMillis())+".jpg";
-                File destination= new File(sd+EaseLifeConstants.imagesPath, fileName);
-                if (sourceFile.exists()) {
-                    FileChannel src = new FileInputStream(sourceFile).getChannel();
-                    FileChannel dst = new FileOutputStream(destination).getChannel();
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-                }
-                selectedImagePath = fileName;
-            }
-        } catch (Exception e) {
-            Log.e("AddNewStuff - save image()"," Error - ",e);
-        }
-    }
 
     private void save()
     {
         if(newCategory != null)
         {
-            newCategory = new Categories(name,selectedImagePath,true,0,description);
+            if(isEdit == false) {
+                newCategory = new Categories(name, selectedImagePath, true,0, description);
+            }
+            else
+            {
+                newCategory.setCategoryName(name);
+                newCategory.setDescription(description);
+                newCategory.setImageResourcePath(selectedImagePath);
+            }
             newCategory.save(this);
         }
         else if(newSubcategory != null)
@@ -307,5 +316,28 @@ public class AddNewStuff extends ActionBarActivity {
         }
         startActivity(whereToGoBack);
         finish();
+    }
+
+    void setDetails()
+    {
+        isEdit = true;
+        nameEditText.setText(newCategory.getCategoryName());
+        descriptionEditText.setText(newCategory.getDescription());
+        selectedImagePath = newCategory.getImageResourcePath();
+        if(newCategory.getImageResourcePath() == null)
+        {
+            selectImageBtn.setImageResource(R.drawable.imagenotselected);
+        }
+        else if (Util.isInteger(newCategory.getImageResourcePath())) {
+
+            selectImageBtn.setImageResource(
+                    CategoriesImageAdapter.categoriesThumbHM.get(Integer.parseInt(newCategory.getImageResourcePath())));
+        } else {
+            File sd = Environment.getExternalStorageDirectory();
+            File image = new File(sd + EaseLifeConstants.imagesPath, newCategory.getImageResourcePath());
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+            selectImageBtn.setImageBitmap(bitmap);
+        }
     }
 }

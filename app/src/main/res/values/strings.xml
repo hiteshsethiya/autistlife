@@ -13,5 +13,5 @@
     <string name="category_name_view">Category Name</string>
     <string name="category_description">Category Description</string>
     <string name="add_category">Add Category</string>
-
+    <string name="delete_action">Delete</string>
 </resources>

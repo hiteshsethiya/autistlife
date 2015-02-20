@@ -33,6 +33,7 @@ public class Categories implements Parcelable{
 
     @DatabaseField
     private boolean active;
+    public static final String ACTIVE_COLUMN_NAME = "active";
 
     @DatabaseField
     private int likes; // number of clicks

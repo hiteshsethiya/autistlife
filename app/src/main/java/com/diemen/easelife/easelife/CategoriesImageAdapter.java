@@ -116,7 +116,7 @@ public class CategoriesImageAdapter extends BaseAdapter{
 
     }
 
-    private static HashMap<Integer,Integer> categoriesThumbHM = new HashMap<Integer,Integer>();
+    public static HashMap<Integer,Integer> categoriesThumbHM = new HashMap<Integer,Integer>();
     static class ViewHolder
     {
         TextView textView;

@@ -65,13 +65,14 @@ public class Util {
 
     private static void startAnimations(int length,GridView gridView,Animation animation)
     {
-        for(int i = 0; i < length; ++i) {
+        for(int i = 0; i < length ; ++i) {
+            gridView.getChildAt(i).setAnimation(animation);
             gridView.getChildAt(i).startAnimation(animation);
         }
     }
     private static void stopAnimations(int length,GridView gridView,Animation animation)
     {
-        for(int i = 0; i < length; ++i) {
+        for(int i = 0; i < length ; ++i) {
             gridView.getChildAt(i).setAnimation(animation);
         }
     }

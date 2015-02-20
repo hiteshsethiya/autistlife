@@ -1,26 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".StartActivity">
-
+    tools:context=".AddNewStuff">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/action_settings" />
-
     <item
-        android:id="@+id/edit_category"
-        android:icon="@drawable/ic_action_edit"
+        android:id="@+id/delete_action"
+        android:icon="@drawable/ic_action_delete"
         android:orderInCategory="101"
         android:title="@string/action_settings"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_new"
-        android:icon="@drawable/ic_action_new"
-        android:orderInCategory="102"
-        android:title="@string/action_settings"
-        app:showAsAction="always" />
-
 </menu>

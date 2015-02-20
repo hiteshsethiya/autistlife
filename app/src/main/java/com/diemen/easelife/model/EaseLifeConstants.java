@@ -9,7 +9,7 @@ public class EaseLifeConstants {
 
     public final static int CATEGORIES_OBJECT = 1;
     public final static int SUB_CATEGORIES_OBJECT = 2;
-
+    public final static String  PARCELABLE_OBJECT = "parcel";
     public final static String CHOOSE_PICTURE = "SELECT A PICTURE";
     public final static String SELECT_IMAGE_FROM_GALLERY = " Gallery";
     public final static String CLICK_IMAGE_FROM_CAMERA = " Camera";
