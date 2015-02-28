@@ -50,6 +50,7 @@ public class UserListActivity extends ActionBarActivity {
                 gotoChat.putExtra("ReceiverPhone",user.getPhoneNo());
                 gotoChat.putExtra("SenderPhone",currentUser.getString("PhoneNumber"));
                 gotoChat.putExtra("Sender",currentUser.getUsername());
+                gotoChat.putExtra("SrcActivity","UserListActivity");
                 startActivity(gotoChat);
                 finish();
             }

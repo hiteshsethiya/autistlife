@@ -61,25 +61,33 @@ public class ChatActivity extends ActionBarActivity {
         final String SenderPhone=chatIntent.getString("SenderPhone");
         final String Receiver=chatIntent.getString("Receiver");
         final String Sender=chatIntent.getString("Sender");
-        getSupportActionBar().setTitle(Receiver);
 
 
-        List<Chat> list=DBManager.getInstance().getAllChats(SenderPhone,ReceiverPhone);
+        String SrcActivity=chatIntent.get("SrcActivity").toString();
+                if(SrcActivity.toString().equals("UserListActivity")) {
+                    getSupportActionBar().setTitle(Receiver);
+                    List<Chat> list = DBManager.getInstance().getAllChats(ReceiverPhone);
+                    for (Chat c : list) {
+                        Message newmessage = new Message();
+                        newmessage.setFromName(c.getSender());
+                        newmessage.setMessage(c.getMessage());
+                        newmessage.setSelf(c.isSelf());
+                        appendMessage(newmessage);
+                    }
+                }
 
-        for(Chat c: list)
-        {
-          Message newmessage=new Message();
-          newmessage.setFromName(c.getSender());
-          newmessage.setMessage(c.getMessage());
-
-          newmessage.setSelf(c.isSelf());
-          appendMessage(newmessage);
-
-        }
-
-
-
-
+        else if(SrcActivity.toString().equals("PushBroadCastReceiver"))
+                {
+                    getSupportActionBar().setTitle(Receiver);
+                    List<Chat> list = DBManager.getInstance().getAllChats(ReceiverPhone);
+                    for (Chat c : list) {
+                        Message newmessage = new Message();
+                        newmessage.setFromName(c.getSender());
+                        newmessage.setMessage(c.getMessage());
+                        newmessage.setSelf(c.isSelf());
+                        appendMessage(newmessage);
+                    }
+                }
 
 
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -92,8 +100,15 @@ public class ChatActivity extends ActionBarActivity {
                     Chat chat = new Chat();
                     chat.setMessage(inputMsg.getText().toString());
                     chat.setSelf(true);
+                    chat.setSender(Sender);
+                    chat.setSenderPhone(SenderPhone);
+                    chat.setReceiver(Receiver);
+                    chat.setReceiverPhone(ReceiverPhone);
                     Date date = new Date();
                     date.getTime();
+
+
+                    DBManager.getInstance().addChat(chat);
 
                     Message newmessage = new Message();
                     newmessage.setFromName(currentUser.getUsername());
@@ -109,7 +124,10 @@ public class ChatActivity extends ActionBarActivity {
                         pQuery.whereEqualTo("phone", ReceiverPhone);
                         ParsePush pushMessage = new ParsePush();
                         pushMessage.setQuery(pQuery);
-                        data = new JSONObject("{\"alert\":\"New Message\",\"Message\": \"" + chat.getMessage() + "\",\"ReceiverPhone\": \"" + ReceiverPhone + "\",\"Sender\":\"" + Sender + "\",\"Receiver\":\"" + Receiver + "\" ,\"SenderPhone\":\"" + SenderPhone + "\",\"ReceivedOn\":\"" + date.getTime() + "\"}");
+
+                        //Always keep in mind "I am the Sender"
+                        //when the user will receive this message he will be the sender;
+                        data = new JSONObject("{\"alert\":\"New Message\",\"Message\": \"" + chat.getMessage() + "\",\"ReceiverPhone\": \"" + SenderPhone + "\",\"Sender\":\"" + Receiver + "\",\"Receiver\":\"" + Sender + "\" ,\"SenderPhone\":\"" + ReceiverPhone + "\",\"ReceivedOn\":\"" + date.getTime() + "\"}");
                         pushMessage.setMessage("Anuj");
                         pushMessage.setData(data);
                         pushMessage.sendInBackground();

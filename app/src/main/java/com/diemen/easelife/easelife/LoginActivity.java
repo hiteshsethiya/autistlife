@@ -89,6 +89,7 @@ public class LoginActivity extends ActionBarActivity {
                             if (e == null) {
                                 ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
                                 currentInstall.put("phone",PhoneNo);
+                                currentInstall.saveEventually();
                                 Intent i = new Intent(getApplicationContext(), StartActivity.class);
                                 startActivity(i);
                                 finish();

@@ -136,10 +136,10 @@ public class DBManager {
        }
     }
 
-    public List<Chat> getAllChats(String Sender,String Receiver)
+    public List<Chat> getAllChats(String Receiver)
     {
         try{
-            List<Chat> list =getDbHelper().getChatDao().queryForEq("SenderPhone",Sender);
+            List<Chat> list =getDbHelper().getChatDao().queryForEq("ReceiverPhone",Receiver);
             return list;
         }
         catch (SQLException e){

@@ -46,6 +46,7 @@ public class PushBroadcastReceiver extends ParsePushBroadcastReceiver{
         DBManager.getInstance().addChat(chat);
 
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.putExtra("SrcActivity","PushBroadCastReceiver");
         context.startActivity(i);
     }
 
