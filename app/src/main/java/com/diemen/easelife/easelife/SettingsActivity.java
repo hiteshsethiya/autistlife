@@ -1,7 +1,9 @@
 package com.diemen.easelife.easelife;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -11,6 +13,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.diemen.easelife.model.User;
+import com.diemen.easelife.pushnotificationhandler.MyService;
 import com.diemen.easelife.sqllite.DBManager;
 import com.diemen.easelife.util.AppSettings;
 
@@ -25,11 +28,13 @@ public class SettingsActivity extends PreferenceActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     ListPreference listPrefUser1;
     ListPreference listPrefUser2;
+    CheckBoxPreference shakePref;
     private AppSettings appPrefs;
 
     CharSequence entries[];
     CharSequence entryValues[];
     List<User> categoryList;
+    Intent intent;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -39,6 +44,7 @@ public class SettingsActivity extends PreferenceActivity {
         appPrefs = new AppSettings(getApplicationContext());
         listPrefUser1 = (ListPreference) findPreference("prefUser1");
         listPrefUser2 = (ListPreference) findPreference("prefUser2");
+        shakePref=(CheckBoxPreference)findPreference("prefShakeService");
 
         User user1 = appPrefs.getUser1();
         if(user1 != null){
@@ -68,6 +74,25 @@ public class SettingsActivity extends PreferenceActivity {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        shakePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Boolean shakebool=Boolean.parseBoolean(newValue.toString());
+                if(shakebool==true)
+                {
+                    intent = new Intent(getApplicationContext(),MyService.class);
+                    startService(intent);
+                    shakePref.setChecked(shakebool);
+                }
+                else
+                {
+                    stopService(intent);
+                    shakePref.setChecked(shakebool);
+                }
+                return false;
+            }
+        });
 
         listPrefUser1.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
