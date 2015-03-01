@@ -8,12 +8,21 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.FloatMath;
 import android.util.Log;
 import android.widget.Toast;
 
+
+import com.parse.ParseACL;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 
 import java.io.Console;
 import java.util.List;
@@ -23,22 +32,47 @@ import java.util.logging.Handler;
 /**
  * Created by user on 30-01-2015.
  */
-public class MyService extends Service implements SensorEventListener {
+public class MyService extends Service implements SensorEventListener,LocationListener {
+
+    // Anxiety Variables
     SensorManager mSensorManager;
     private MyService mShakeDetector;
     private Sensor mAccelerometer;
     private static final float SHAKE_THRESHOLD_GRAVITY = 1.9F;
     private static final int SHAKE_SLOP_TIME_MS = 500;
     private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;
-
-
     private OnShakeListener mListener;
     private long mShakeTimestamp;
     private int mShakeCount=0;
 
+    //Location Variables
+    LocationManager locationManager;
+
 
     public void setOnShakeListener(OnShakeListener listener) {
         this.mListener = listener;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
+        currentInstall.put("location", new ParseGeoPoint(location.getLatitude(),location.getLongitude()));
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
 
@@ -108,6 +142,10 @@ public class MyService extends Service implements SensorEventListener {
         //    mSensorManager.registerListener(mShakeDetector, mAccelerometer,SensorManager.SENSOR_DELAY_UI);
 
 
+        locationManager= (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,2000,0, this);
+
         mShakeDetector.setOnShakeListener(new OnShakeListener() {
             @Override
             public void onShake(int count) {
@@ -119,7 +157,7 @@ public class MyService extends Service implements SensorEventListener {
                 Toast.makeText(getApplicationContext(),"Shake Has Happened",Toast.LENGTH_LONG).show();
 
 
-                Log.d("Shaker","Do Something Anuj");
+              //  Log.d("Shaker","Do Something Anuj");
                 // handleShakeEvent(count);
             }
         });

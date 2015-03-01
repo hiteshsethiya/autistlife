@@ -1,6 +1,7 @@
 package com.diemen.easelife.easelife;
 
 import android.app.Activity;
+import android.app.IntentService;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.model.User;
+import com.diemen.easelife.pushnotificationhandler.MyService;
 import com.diemen.easelife.sqllite.DBManager;
 import com.diemen.easelife.util.Util;
 
@@ -46,6 +48,12 @@ public class StartActivity extends ActionBarActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_start);
             DBManager.init(this);
+
+            
+            Intent intent=new Intent(this, MyService.class);
+            startService(intent);
+
+
 
             categoriesGridView = (GridView) findViewById(R.id.categories_grid);
 
