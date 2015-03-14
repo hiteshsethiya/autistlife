@@ -42,9 +42,9 @@ public class CategorySQLHelper {
 
         initSubcategoryList.add(new Subcategory(3,4,"Anuj","8",0.00,0.00, new Date(),true, "Hi, Anuj! ",0));
 
-        initSubcategoryList.add(new Subcategory(4,1,"School","9",0.00,0.00, new Date(),true, "School Ka Bhosada ",0));
+        initSubcategoryList.add(new Subcategory(4,1,"School","9",0.00,0.00, new Date(),true, " i want to go to School  ",0));
 
-        initSubcategoryList.add(new Subcategory(5,1,"Home","7",0.00,0.00, new Date(),true, "Rastogi chutiya hain! ",0));
+        initSubcategoryList.add(new Subcategory(5,1,"Home","7",0.00,0.00, new Date(),true, "I want to go home ",0));
 
         return initSubcategoryList;
     }

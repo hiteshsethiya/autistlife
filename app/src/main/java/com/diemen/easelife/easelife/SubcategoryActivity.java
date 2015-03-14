@@ -60,11 +60,10 @@ public class SubcategoryActivity extends ActionBarActivity{
                 if(updateCategoryLike != null) {
                     updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
                     DBManager.getInstance().updateSubcategoryLike(updateCategoryLike);
-                    Toast.makeText(SubcategoryActivity.this,updateCategoryLike.getDescription() +" Likes:"+updateCategoryLike.getLikes(), Toast.LENGTH_SHORT).show();
                 }
-                //Move to subcategory event
-                Toast.makeText(SubcategoryActivity.this,"Like "+updateCategoryLike.getLikes() + 1,Toast.LENGTH_SHORT).show();
+
                 Intent userList = new Intent(getApplicationContext(),UserListActivity.class);
+                userList.putExtra(Subcategory.SUBCATEGORY_OBJECT,updateCategoryLike);
                 startActivity(userList);
                 finish();
             }
@@ -117,4 +116,5 @@ public class SubcategoryActivity extends ActionBarActivity{
 
         return super.onOptionsItemSelected(item);
     }
+
 }

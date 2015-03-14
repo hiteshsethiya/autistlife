@@ -120,7 +120,10 @@ public class StartActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if(id == R.id.edit_category)
         {
-            Util.animateIngridView(categoriesGridView, shakeImages);
+            Util.animateIngridView(categoriesGridView,shakeImages);
+
+         /*   Util.changebackground(categoriesGridView,getResources().getColor(R.color.abc_primary_text_disable_only_material_light),
+                    getResources().getColor(R.color.lightest_blue));*/
         }
         else if (id == R.id.action_new) {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);

@@ -74,7 +74,8 @@ private int categoryId;
         {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.textView.setText(subcategories.get(position).getSubcategoryName());
+        holder.textView.setText(subcategories.get(position).getSubcategoryName()
+                +" ("+subcategories.get(position).getLikes()+")");
         String imageName = subcategories.get(position).getImagePath();
 
         if(imageName != null)

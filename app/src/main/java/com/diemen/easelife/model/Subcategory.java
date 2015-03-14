@@ -9,6 +9,8 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +136,8 @@ public class Subcategory implements Parcelable {
 
     public Subcategory(){}
 
-    public Subcategory(int id, int categoryId, String subcategoryName, String imagePath, double latitude, double longitude, Date createdAt, boolean active, String description, int likes) {
+    public Subcategory(int id, int categoryId, String subcategoryName, String imagePath,double latitude,
+                       double longitude, Date createdAt, boolean active, String description, int likes) {
         this.id = id;
         this.categoryId = categoryId;
         this.subcategoryName = subcategoryName;
@@ -147,7 +150,8 @@ public class Subcategory implements Parcelable {
         this.likes = likes;
     }
 
-    public Subcategory(int categoryId, String subcategoryName, String imagePath, double latitude, double longitude, Date createdAt, boolean active, String description, int likes) {
+    public Subcategory(int categoryId, String subcategoryName, String imagePath, double latitude,
+                       double longitude, Date createdAt, boolean active, String description, int likes) {
         this.categoryId = categoryId;
         this.subcategoryName = subcategoryName;
         this.imagePath = imagePath;
@@ -182,11 +186,52 @@ public class Subcategory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this);
+        dest.writeInt(this.id);
+        dest.writeInt(this.categoryId);
+        dest.writeString(this.subcategoryName);
+        dest.writeString(this.getImagePath());
+        dest.writeInt(this.likes);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+        dest.writeLong(this.createdAt.getTime());
+        dest.writeByte((byte) (this.active ? 1 : 0));
+        dest.writeString(this.description);
     }
+    public static Subcategory readFromParcel(Parcel in)
+    {
+        int id = in.readInt();
+        int categoryId = in.readInt();
+        String subcategoryName = in.readString();
+        String imagePath = in.readString();
+        int likes = in.readInt();
+        Double latitude = in.readDouble();
+        Double longitude = in.readDouble();
+        long createdAt = in.readLong();
+        boolean active = (boolean)(in.readByte()==1 ? true:false);
+        String description = in.readString();
+
+        return new Subcategory(id,categoryId,subcategoryName,imagePath, latitude,
+                    longitude,new Date(createdAt), active, description, likes);
+
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() // (5)
+    {
+        public Subcategory createFromParcel(Parcel in) // (6)
+        {
+            return readFromParcel(in);
+        }
+
+        public Subcategory[] newArray(int size) { // (7)
+            return new Subcategory[size];
+        }
+    };
 
     public boolean save(Context context)
     {
         return DBManager.getInstance(context).saveSubCategory(this);
     }
+
+    public static final String SUBCATEGORY_OBJECT = "subcategoryObject";
+
 }

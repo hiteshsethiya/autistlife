@@ -86,7 +86,8 @@ public class CategoriesImageAdapter extends BaseAdapter{
             holder = (ViewHolder) convertView.getTag();
         }
         if(position != categoriesList.size()) {
-            holder.textView.setText(categoriesList.get(position).getCategoryName());
+            holder.textView.setText(categoriesList.get(position).getCategoryName()
+                    +" ("+categoriesList.get(position).getLikes()+")");
             String imageName = categoriesList.get(position).getImageResourcePath();
 
             if (imageName != null) {

@@ -6,6 +6,8 @@ import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.GridView;
 
+import com.diemen.easelife.easelife.R;
+
 /**
  * Created by tfs-hitesh on 11/1/15.
  */
@@ -60,6 +62,22 @@ public class Util {
             stopAnimations(length,gridView,null);
             tapdone = 0;
 
+        }
+    }
+
+    public static void changebackground(GridView gridView, int ontap,int ontaprelease)
+    {
+        if(gridView == null)
+        {
+            return;
+        }
+
+        tapdone++;
+        if (tapdone == 1) {
+            gridView.setBackgroundColor(ontap);
+        } else if(tapdone == 2){
+            gridView.setBackgroundColor(ontaprelease);
+            tapdone = 0;
         }
     }
 

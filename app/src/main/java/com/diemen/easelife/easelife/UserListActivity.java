@@ -32,6 +32,7 @@ public class UserListActivity extends ActionBarActivity {
     ListView list;
     ArrayList<User> mList = new ArrayList<User>();
     UserListAdapter adapter;
+    private Subcategory subcategory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,7 @@ public class UserListActivity extends ActionBarActivity {
         createList();
         list.setAdapter(adapter);
         list.setItemsCanFocus(true);
+        subcategory = getIntent().getParcelableExtra(Subcategory.SUBCATEGORY_OBJECT);
 
 
 
@@ -52,9 +54,9 @@ public class UserListActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                User user=mList.get(position);
+                User user = mList.get(position);
                 Intent gotoChat;
-                ParseUser currentUser=ParseUser.getCurrentUser();
+                ParseUser currentUser = ParseUser.getCurrentUser();
                 gotoChat = new Intent(getApplicationContext(), ChatActivity.class);
                 gotoChat.putExtra("Receiver",user.getName());
                 gotoChat.putExtra("ReceiverPhone",user.getPhoneNo());
@@ -66,7 +68,7 @@ public class UserListActivity extends ActionBarActivity {
 
 
                 Chat chat = new Chat();
-                chat.setMessage(" ");
+                chat.setMessage(getMessage(user));
                 chat.setSelf(true);
                 chat.setSender(currentUser.getUsername());
                 chat.setSenderPhone(currentUser.getString("PhoneNumber"));
@@ -74,6 +76,12 @@ public class UserListActivity extends ActionBarActivity {
                 chat.setReceiverPhone(user.getPhoneNo());
                 SendMessage(chat);
 
+
+               gotoChat.putExtra("Receiver", user.getName());
+                gotoChat.putExtra("ReceiverPhone", user.getPhoneNo());
+                gotoChat.putExtra("SenderPhone", currentUser.getString("PhoneNumber"));
+                gotoChat.putExtra("Sender", currentUser.getUsername());
+                gotoChat.putExtra("SrcActivity", "UserListActivity");
 
                 startActivity(gotoChat);
                 finish();
@@ -88,7 +96,7 @@ public class UserListActivity extends ActionBarActivity {
         {
             mList.add(u);
         }
-        mList.add(new User("Anuj", "234234234242"));
+        //mList.add(new User("Anuj", "234234234242"));
 
     }
 
@@ -120,8 +128,24 @@ public class UserListActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent subcategory = new Intent(getApplicationContext(),SubcategoryActivity.class);
-        startActivity(subcategory);
+        Intent subcategoryIntent = new Intent(getApplicationContext(),SubcategoryActivity.class);
+        subcategoryIntent.putExtra("categoryId", subcategory.getCategoryId());
+        startActivity(subcategoryIntent);
         finish();
     }
+
+    public String getMessage(User destionationUser)
+    {
+        StringBuilder message = new StringBuilder();
+        message.append("Hi ");
+        message.append(destionationUser.getName());
+        message.append(",");
+        message.append("I need ");
+        message.append(subcategory.getSubcategoryName());
+        message.append(". ");
+        message.append(subcategory.getDescription());
+        return message.toString();
+    }
+    private final String TAG = "UserListActivity";
+    public final static String MESSAGE_TO_USER = "messageToUser";
 }
