@@ -30,3 +30,9 @@ proguard/
 .idea/gradle.xml
 .idea/libraries/support_annotations_21_0_2.xml
 .idea/libraries/support_v4_21_0_2.xml
+*/workspace.xml
+.DS_Store
+*/.DS_Store
+
+
+.idea/*

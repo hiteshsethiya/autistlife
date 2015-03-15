@@ -120,8 +120,9 @@ public class StartActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if(id == R.id.edit_category)
         {
-            Util.animateIngridView(categoriesGridView,shakeImages);
-
+            //Util.animateIngridView(categoriesGridView,shakeImages);
+            Intent map = new Intent(getApplicationContext(),MapsActivity.class);
+startActivity(map);
          /*   Util.changebackground(categoriesGridView,getResources().getColor(R.color.abc_primary_text_disable_only_material_light),
                     getResources().getColor(R.color.lightest_blue));*/
         }
