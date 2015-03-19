@@ -11,8 +11,10 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.diemen.easelife.model.User;
+import com.diemen.easelife.pushnotificationhandler.LocationService;
 import com.diemen.easelife.pushnotificationhandler.MyService;
 import com.diemen.easelife.sqllite.DBManager;
 import com.diemen.easelife.util.AppSettings;
@@ -29,6 +31,7 @@ public class SettingsActivity extends PreferenceActivity {
     ListPreference listPrefUser1;
     ListPreference listPrefUser2;
     CheckBoxPreference shakePref;
+    CheckBoxPreference locationPref;
     private AppSettings appPrefs;
 
     CharSequence entries[];
@@ -45,6 +48,7 @@ public class SettingsActivity extends PreferenceActivity {
         listPrefUser1 = (ListPreference) findPreference("prefUser1");
         listPrefUser2 = (ListPreference) findPreference("prefUser2");
         shakePref=(CheckBoxPreference)findPreference("prefShakeService");
+        locationPref=(CheckBoxPreference)findPreference("prefLocationService");
 
         User user1 = appPrefs.getUser1();
         if(user1 != null){
@@ -84,15 +88,40 @@ public class SettingsActivity extends PreferenceActivity {
                     intent = new Intent(getApplicationContext(),MyService.class);
                     startService(intent);
                     shakePref.setChecked(shakebool);
+                    Toast.makeText(getApplicationContext(),"Anxiety Service Has Started",Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
                     stopService(intent);
                     shakePref.setChecked(shakebool);
+                    Toast.makeText(getApplicationContext(),"Anxiety Service Has Stopped",Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
         });
+
+        locationPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Boolean locbool=Boolean.parseBoolean(newValue.toString());
+                if(locbool==true)
+                {
+                    intent = new Intent(getApplicationContext(),LocationService.class);
+                    startService(intent);
+                    shakePref.setChecked(locbool);
+                    Toast.makeText(getApplicationContext(),"Location Service Has Started",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    stopService(intent);
+                    shakePref.setChecked(locbool);
+                    Toast.makeText(getApplicationContext(),"Location Service Has Stopped",Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+
+
 
         listPrefUser1.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 

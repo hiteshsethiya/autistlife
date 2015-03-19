@@ -16,6 +16,12 @@ public class User {
 
     }
 
+    User(String name,String phoneNo,String contact_id){
+        this.name=name;
+        this.phoneNo=phoneNo;
+        this.contact_id=contact_id;
+    }
+
     public int getUserid() {
         return userid;
     }
@@ -29,6 +35,17 @@ public class User {
 
     @DatabaseField
     private String name;
+
+    @DatabaseField
+    private String contact_id;
+
+    public String getcontact_id() {
+        return contact_id;
+    }
+
+    public void setcontact_id(String contact_id) {
+        this.contact_id = contact_id;
+    }
 
     public String getPhoneNo() {
         return phoneNo;

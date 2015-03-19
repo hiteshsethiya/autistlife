@@ -1,7 +1,10 @@
 package com.diemen.easelife.easelife;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +59,14 @@ public class UserListAdapter extends BaseAdapter {
         User  song = data.get(position);
         // Setting all values in listview
 
+        Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long
+                .parseLong(song.getcontact_id()));
+
+        Uri Image_uri=Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+
         title.setText(song.getName());
         artist.setText(song.getPhoneNo());
+        thumb_image.setImageURI(Image_uri);
         return vi;
     }
 }

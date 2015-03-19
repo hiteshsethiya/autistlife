@@ -1,13 +1,10 @@
 package com.diemen.easelife.easelife;
 
 import android.app.Activity;
-import android.app.IntentService;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.preference.CheckBoxPreference;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -21,17 +18,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.diemen.easelife.model.Categories;
 import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.model.User;
-import com.diemen.easelife.pushnotificationhandler.MyService;
 import com.diemen.easelife.sqllite.DBManager;
-import com.diemen.easelife.util.AppSettings;
-import com.diemen.easelife.util.Util;
-
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -173,11 +163,11 @@ startActivity(map);
                         if(name!="" && phoneNumber!="") {
                             AddUser.setName(name);
                             AddUser.setPhoneNo(Phone);
+                            AddUser.setcontact_id(contactId);
                             DBManager.getInstance().addUser(AddUser);
                         }
 
-
-                        Toast.makeText(getApplicationContext(),"name:"+name +" phone:"+Phone,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Name:"+name +"  Phone:"+Phone,Toast.LENGTH_LONG).show();
                     }
                 }
                 break;

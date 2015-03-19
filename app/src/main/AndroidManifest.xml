@@ -39,6 +39,8 @@
         </receiver>
 
         <service android:name="com.diemen.easelife.pushnotificationhandler.MyService"/>
+        <service android:name="com.diemen.easelife.pushnotificationhandler.LocationService"/>
+
 
         <receiver android:name="com.parse.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
