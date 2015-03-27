@@ -7,6 +7,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
@@ -22,6 +23,8 @@ public class LocationService extends Service implements LocationListener {
     LocationManager locationManager;
     @Override
     public void onLocationChanged(Location location) {
+        Log.d("Location", "Location has recorded Anuj");
+
         ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
         currentInstall.put("location", new ParseGeoPoint(location.getLatitude(),location.getLongitude()));
     }
