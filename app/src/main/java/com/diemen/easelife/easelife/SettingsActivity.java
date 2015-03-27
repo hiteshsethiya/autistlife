@@ -108,13 +108,13 @@ public class SettingsActivity extends PreferenceActivity {
                 {
                     intent = new Intent(getApplicationContext(),LocationService.class);
                     startService(intent);
-                    shakePref.setChecked(locbool);
+                    locationPref.setChecked(locbool);
                     Toast.makeText(getApplicationContext(),"Location Service Has Started",Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
                     stopService(intent);
-                    shakePref.setChecked(locbool);
+                    locationPref.setChecked(locbool);
                     Toast.makeText(getApplicationContext(),"Location Service Has Stopped",Toast.LENGTH_SHORT).show();
                 }
                 return false;
