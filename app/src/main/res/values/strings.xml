@@ -14,4 +14,9 @@
     <string name="category_description">Category Description</string>
     <string name="add_category">Add Category</string>
     <string name="delete_action">Delete</string>
+    <string name="gps_network_not_enabled">GPS not Enabled</string>
+    <string name="Cancel">Cancel</string>
+    <string name="open_location_settings">Turn on location</string>
+    <string name="new_user">New User</string>
+
 </resources>

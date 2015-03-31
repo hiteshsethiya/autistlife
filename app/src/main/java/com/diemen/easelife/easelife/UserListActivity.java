@@ -1,12 +1,19 @@
 package com.diemen.easelife.easelife;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.diemen.easelife.model.Chat;
 import com.diemen.easelife.model.Subcategory;
@@ -30,9 +37,11 @@ import java.util.List;
 public class UserListActivity extends ActionBarActivity {
 
     ListView list;
-    ArrayList<User> mList = new ArrayList<User>();
+    List<User> mList = new ArrayList<User>();
     UserListAdapter adapter;
     private Subcategory subcategory;
+    User addUser = new User();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +49,8 @@ public class UserListActivity extends ActionBarActivity {
 
         list=(ListView)findViewById(R.id.list);
         // Getting adapter by passing xml data ArrayList
-        adapter=new UserListAdapter(this, mList);
         createList();
+        adapter=new UserListAdapter(this, mList);
         list.setAdapter(adapter);
         list.setItemsCanFocus(true);
         subcategory = getIntent().getParcelableExtra(Subcategory.SUBCATEGORY_OBJECT);
@@ -90,14 +99,7 @@ public class UserListActivity extends ActionBarActivity {
     }
 
     public void createList(){
-
-        List<User> userList= DBManager.getInstance().getAllUsers();
-        for(User u : userList )
-        {
-            mList.add(u);
-        }
-        //mList.add(new User("Anuj", "234234234242"));
-
+        mList = DBManager.getInstance().getAllUsers();
     }
 
     public void SendMessage(Chat chat)
@@ -124,16 +126,6 @@ public class UserListActivity extends ActionBarActivity {
 
     }
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent subcategoryIntent = new Intent(getApplicationContext(),SubcategoryActivity.class);
-        subcategoryIntent.putExtra("categoryId", subcategory.getCategoryId());
-        startActivity(subcategoryIntent);
-        finish();
-    }
-
     public String getMessage(User destionationUser)
     {
         StringBuilder message = new StringBuilder();
@@ -146,6 +138,98 @@ public class UserListActivity extends ActionBarActivity {
         message.append(subcategory.getDescription());
         return message.toString();
     }
+
+    /* All over ridden methods start here */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent subcategoryIntent = new Intent(getApplicationContext(),SubcategoryActivity.class);
+        subcategoryIntent.putExtra("categoryId", subcategory.getCategoryId());
+        startActivity(subcategoryIntent);
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_user_list_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id)
+        {
+            case R.id.action_new: Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                                  startActivityForResult(intent, PICK_CONTACT);
+                                  break;
+
+            default:break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Implemented onActivityResult for Picking up a contact from User contacts.
+     * This method is called once the User clicks on the preferred contact
+     */
+
+    @Override
+    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+        switch (reqCode) {
+            case (PICK_CONTACT) :
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri contactData = data.getData();
+                    Cursor cursor =  getContentResolver().query(contactData, null, null, null, null);
+                    if (cursor.moveToFirst()) {
+                        String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                        int nameIdx = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                        String hasPhone = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                        String phoneNumber ="";
+                        if ( hasPhone.equalsIgnoreCase("1"))
+                            hasPhone = "true";
+                        else
+                            hasPhone = "false" ;
+
+                        if (Boolean.parseBoolean(hasPhone))
+                        {
+                            Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId,null, null);
+                            while (phones.moveToNext())
+                            {
+                                phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            }
+                            phones.close();
+                        }
+                        String name = cursor.getString(nameIdx);
+                        phoneNumber= phoneNumber.replace(" ","");
+                        String Phone=phoneNumber.length()>10?phoneNumber.substring(phoneNumber.length()-10):phoneNumber;
+
+                        if(name!="" && phoneNumber!="") {
+                            addUser.setName(name);
+                            addUser.setPhoneNo(Phone);
+                            addUser.setcontact_id(contactId);
+                            DBManager.getInstance().addUser(addUser);
+                        }
+
+                        Toast.makeText(getApplicationContext(), "Added: Name:" + name + "  Phone:" + Phone, Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+        createList();
+        adapter.notifyDataSetChanged();
+    }
+
+
+
+
+    /* All over ridden methods end here */
+
     private final String TAG = "UserListActivity";
     public final static String MESSAGE_TO_USER = "messageToUser";
+    private static final int PICK_CONTACT = 100;
 }

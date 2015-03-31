@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,10 @@ import android.widget.TextView;
 
 import com.diemen.easelife.model.User;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by user on 23-01-2015.
@@ -23,11 +26,11 @@ import java.util.HashMap;
 public class UserListAdapter extends BaseAdapter {
 
     private Activity activity;
-    private ArrayList<User> data;
+    private List<User> data;
     private static LayoutInflater inflater=null;
 
 
-    public UserListAdapter(Activity a, ArrayList<User> d) {
+    public UserListAdapter(Activity a, List<User> d) {
         activity = a;
         data=d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,26 +50,33 @@ public class UserListAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        View vi=convertView;
-        if(convertView==null)
-            vi = inflater.inflate(R.layout.user_list_row, null);
+        View vi = convertView;
+        try {
 
-        TextView title = (TextView)vi.findViewById(R.id.title); // title
-        TextView artist = (TextView)vi.findViewById(R.id.artist); // artist name
-        ImageView thumb_image=(ImageView)vi.findViewById(R.id.list_image); // thumb image
+            if (convertView == null)
+                vi = inflater.inflate(R.layout.user_list_row, null);
 
-        title.setTag(data.get(position));
-        User  song = data.get(position);
-        // Setting all values in listview
+            TextView title = (TextView) vi.findViewById(R.id.title); // title
+            TextView artist = (TextView) vi.findViewById(R.id.artist); // artist name
+            ImageView thumb_image = (ImageView) vi.findViewById(R.id.list_image); // thumb image
 
-        Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long
-                .parseLong(song.getcontact_id()));
+            title.setTag(data.get(position));
+            User song = data.get(position);
+            // Setting all values in listview
 
-        Uri Image_uri=Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+            Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long
+                    .parseLong(song.getcontact_id()));
 
-        title.setText(song.getName());
-        artist.setText(song.getPhoneNo());
-        thumb_image.setImageURI(Image_uri);
+            Uri Image_uri = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+
+            title.setText(song.getName());
+            artist.setText(song.getPhoneNo());
+            thumb_image.setImageURI(Image_uri);
+        }
+        catch(Exception e)
+        {
+            Log.i("USER LIST ADAPTER","Image not found for URI",e);
+        }
         return vi;
     }
 }
