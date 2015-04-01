@@ -28,7 +28,6 @@ import java.util.List;
 public class SubcategoryActivity extends ActionBarActivity{
 
      GridView subcategoryGridView;
-     Button addButton;
     Integer categoryId;
 
     @Override
@@ -37,7 +36,6 @@ public class SubcategoryActivity extends ActionBarActivity{
         setContentView(R.layout.activity_subcategory_grid);
 
         ViewGroup contentView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_subcategory_grid,null);
-        addButton = (Button)findViewById(R.id.add_btn);
 
 
         categoryId = getIntent().getIntExtra("categoryId",1);
@@ -82,7 +80,7 @@ public class SubcategoryActivity extends ActionBarActivity{
                 Subcategory editSubcategoryObject = (Subcategory)clickedImageView.getTag();
                 if(editSubcategoryObject != null) {
                     addNewStuffIntent.putExtra(EaseLifeConstants.PARCELABLE_OBJECT, editSubcategoryObject);
-
+                    addNewStuffIntent.putExtra("categoryId",editSubcategoryObject.getCategoryId());
                     addNewStuffIntent.putExtra("object", EaseLifeConstants.SUB_CATEGORIES_OBJECT);
                     startActivity(addNewStuffIntent);
                 }
