@@ -38,7 +38,7 @@ public class MyService extends Service implements SensorEventListener {
     SensorManager mSensorManager;
     private MyService mShakeDetector;
     private Sensor mAccelerometer;
-    private static final float SHAKE_THRESHOLD_GRAVITY = 1.9F;
+    private static final float SHAKE_THRESHOLD_GRAVITY = 2.0F;
     private static final int SHAKE_SLOP_TIME_MS = 500;
     private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;
     private OnShakeListener mListener;

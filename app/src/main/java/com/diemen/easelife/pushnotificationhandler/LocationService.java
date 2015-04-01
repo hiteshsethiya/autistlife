@@ -8,7 +8,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 
@@ -25,11 +24,11 @@ public class LocationService extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.d("Location", "Location has recorded Anuj");
-
-        ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
+        final ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
         currentLoc.setLongitude(location.getLongitude());
         currentLoc.setLatitude(location.getLatitude());
         currentInstall.put("location", currentLoc);
+        currentInstall.saveInBackground();
     }
 
     @Override
@@ -49,7 +48,6 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         return START_STICKY;
     }
 
