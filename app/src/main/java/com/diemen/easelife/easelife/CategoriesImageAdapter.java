@@ -112,6 +112,7 @@ public class CategoriesImageAdapter extends BaseAdapter{
         {
             holder.imageView.setImageResource(R.drawable.add_category);
             holder.textView.setText("Add Category");
+            holder.imageView.setTag(null);
         }
         return convertView;
 

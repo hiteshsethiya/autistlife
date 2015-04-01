@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,10 +38,10 @@ import java.util.List;
 public class UserListActivity extends ActionBarActivity {
 
     ListView list;
-    List<User> mList = new ArrayList<User>();
+    ArrayList<User> mList = new ArrayList<User>();
     UserListAdapter adapter;
     private Subcategory subcategory;
-    User addUser = new User();
+    User addUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class UserListActivity extends ActionBarActivity {
         list=(ListView)findViewById(R.id.list);
         // Getting adapter by passing xml data ArrayList
         createList();
-        adapter=new UserListAdapter(this, mList);
+        adapter = new UserListAdapter(this, mList);
         list.setAdapter(adapter);
         list.setItemsCanFocus(true);
         subcategory = getIntent().getParcelableExtra(Subcategory.SUBCATEGORY_OBJECT);
@@ -99,7 +100,18 @@ public class UserListActivity extends ActionBarActivity {
     }
 
     public void createList(){
-        mList = DBManager.getInstance().getAllUsers();
+
+        List<User> users = DBManager.getInstance().getAllUsers();
+
+        if(mList != null)
+        {
+            mList.clear();
+        }
+        if(users != null) {
+            for (User user : users) {
+                mList.add(user);
+            }
+        }
     }
 
     public void SendMessage(Chat chat)
@@ -188,16 +200,16 @@ public class UserListActivity extends ActionBarActivity {
                     if (cursor.moveToFirst()) {
                         String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                         int nameIdx = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-                        String hasPhone = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                        /*
+                            Returns the zero-based index for the given column name, or -1 if the column doesn't exist. If you expect the column to exist use getColumnIndexOrThrow(String) instead, which will make the error more clear.
+                         */
+                        int hasPhone = cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);
                         String phoneNumber ="";
-                        if ( hasPhone.equalsIgnoreCase("1"))
-                            hasPhone = "true";
-                        else
-                            hasPhone = "false" ;
 
-                        if (Boolean.parseBoolean(hasPhone))
+                        if (hasPhone >= 0)
                         {
                             Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId,null, null);
+                            phones.moveToFirst();
                             while (phones.moveToNext())
                             {
                                 phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -205,29 +217,60 @@ public class UserListActivity extends ActionBarActivity {
                             phones.close();
                         }
                         String name = cursor.getString(nameIdx);
-                        phoneNumber= phoneNumber.replace(" ","");
-                        String Phone=phoneNumber.length()>10?phoneNumber.substring(phoneNumber.length()-10):phoneNumber;
+                        phoneNumber = phoneNumber.replace(" ","");
+                        phoneNumber = phoneNumber.replace("-","");
+                        phoneNumber = phoneNumber.length()>10?phoneNumber.substring(phoneNumber.length()-10):phoneNumber;
 
                         if(name!="" && phoneNumber!="") {
+                            addUser = new User();
                             addUser.setName(name);
-                            addUser.setPhoneNo(Phone);
+                            addUser.setPhoneNo(phoneNumber);
                             addUser.setcontact_id(contactId);
-                            DBManager.getInstance().addUser(addUser);
+                            if(checkAndUpdateUser(addUser)) {
+                                Toast.makeText(getApplicationContext(), "Added: Name:" + name + "  Phone:" + phoneNumber, Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), "Already Exists: Name:" + name + "  Phone:" + phoneNumber, Toast.LENGTH_SHORT).show();
+                            }
                         }
 
-                        Toast.makeText(getApplicationContext(), "Added: Name:" + name + "  Phone:" + Phone, Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
         }
-        createList();
-        adapter.notifyDataSetChanged();
     }
 
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        createList(); // reload the items from database
+        adapter.notifyDataSetChanged();
+    }
 
     /* All over ridden methods end here */
+
+    public boolean checkAndUpdateUser(User addUser)
+    {
+        if(addUser == null)
+        {
+            return false;
+        }
+        List<User> users = mList;
+        if(users == null || users.size() == 0) {
+             users = DBManager.getInstance().getAllUsers();
+        }
+
+        for(User user: users) {
+            if (addUser.getPhoneNo().equals(user.getPhoneNo()))
+            {
+                return false;
+            }
+        }
+        DBManager.getInstance().addUser(addUser);
+        return true;
+    }
 
     private final String TAG = "UserListActivity";
     public final static String MESSAGE_TO_USER = "messageToUser";

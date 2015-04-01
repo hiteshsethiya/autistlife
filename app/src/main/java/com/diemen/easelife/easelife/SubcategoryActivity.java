@@ -60,25 +60,41 @@ public class SubcategoryActivity extends ActionBarActivity{
                 if(updateCategoryLike != null) {
                     updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
                     DBManager.getInstance().updateSubcategoryLike(updateCategoryLike);
+                    Intent userList = new Intent(getApplicationContext(),UserListActivity.class);
+                    userList.putExtra(Subcategory.SUBCATEGORY_OBJECT,updateCategoryLike);
+                    startActivity(userList);
                 }
-
-                Intent userList = new Intent(getApplicationContext(),UserListActivity.class);
-                userList.putExtra(Subcategory.SUBCATEGORY_OBJECT,updateCategoryLike);
-                startActivity(userList);
+                else
+                {
+                    addNewStuff();
+                }
                 finish();
             }
         });
 
-        addButton.setOnClickListener(new View.OnClickListener() {
+        subcategoryGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                RelativeLayout relative = (RelativeLayout)view;
+                ImageView clickedImageView = (ImageView)relative.getChildAt(0);
                 Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
-                addNewStuffIntent.putExtra("object", EaseLifeConstants.SUB_CATEGORIES_OBJECT);
-                addNewStuffIntent.putExtra("categoryId",categoryId);
-                startActivity(addNewStuffIntent);
+
+                Subcategory editSubcategoryObject = (Subcategory)clickedImageView.getTag();
+                if(editSubcategoryObject != null) {
+                    addNewStuffIntent.putExtra(EaseLifeConstants.PARCELABLE_OBJECT, editSubcategoryObject);
+
+                    addNewStuffIntent.putExtra("object", EaseLifeConstants.SUB_CATEGORIES_OBJECT);
+                    startActivity(addNewStuffIntent);
+                }
+                else
+                {
+                    addNewStuff();
+                }
                 finish();
+                return true;
             }
         });
+
     }
 
 
@@ -115,6 +131,14 @@ public class SubcategoryActivity extends ActionBarActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addNewStuff()
+    {
+        Intent addNewStuffIntent = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
+        addNewStuffIntent.putExtra("object", EaseLifeConstants.SUB_CATEGORIES_OBJECT);
+        addNewStuffIntent.putExtra("categoryId",categoryId);
+        startActivity(addNewStuffIntent);
     }
 
 }

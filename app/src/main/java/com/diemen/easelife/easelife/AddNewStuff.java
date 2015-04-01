@@ -89,7 +89,16 @@ public class AddNewStuff extends ActionBarActivity {
             categoryId = getIntent().getIntExtra("categoryId", 1);
             whereToGoBack = new Intent(this, SubcategoryActivity.class);
             whereToGoBack.putExtra("categoryId",categoryId);
-            newSubcategory = new Subcategory();
+            newSubcategory = getIntent().getParcelableExtra(EaseLifeConstants.PARCELABLE_OBJECT);
+            if(newSubcategory == null)
+            {
+                newSubcategory = new Subcategory();
+            }
+            else
+            {
+                setSubcategoryDetails();
+            }
+
         }
         else {
             viewPlate = "User";
@@ -339,5 +348,29 @@ public class AddNewStuff extends ActionBarActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
             selectImageBtn.setImageBitmap(bitmap);
         }
+    }
+
+    void setSubcategoryDetails()
+    {
+        isEdit = true;
+        nameEditText.setText(newSubcategory.getSubcategoryName());
+        descriptionEditText.setText(newSubcategory.getDescription());
+        selectedImagePath = newSubcategory.getImagePath();
+        if(newSubcategory.getImagePath() == null)
+        {
+            selectImageBtn.setImageResource(R.drawable.imagenotselected);
+        }
+        else if (Util.isInteger(newSubcategory.getImagePath())) {
+
+            selectImageBtn.setImageResource(
+                    SubcategoryImageAdapter.subcategoriesThumbHM.get(Integer.parseInt(newSubcategory.getImagePath())));
+        } else {
+            File sd = Environment.getExternalStorageDirectory();
+            File image = new File(sd + EaseLifeConstants.imagesPath, newSubcategory.getImagePath());
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+            selectImageBtn.setImageBitmap(bitmap);
+        }
+
     }
 }

@@ -61,15 +61,23 @@ public class StartActivity extends ActionBarActivity {
 
                     Categories updateCategoryLike = (Categories) clickedImageView.getTag(); // Get the TAG which was set during adding the image in the adapter
 
-                    // Update the Likes on the Item clicked
-                    updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
-                    DBManager.getInstance().updateCategoryLike(updateCategoryLike);
+                    if(updateCategoryLike != null) {
+                        // Update the Likes on the Item clicked
+                        updateCategoryLike.setLikes(updateCategoryLike.getLikes() + 1);
+                        DBManager.getInstance().updateCategoryLike(updateCategoryLike);
 
-                    //Move to subcategory event
-                    Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
-                    subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
+                        //Move to subcategory event
+                        Intent subCategoryMove = new Intent("com.diemen.easelife.easelife.SUBCATEGORYACTIVITY");
+                        subCategoryMove.putExtra("categoryId", updateCategoryLike.getId());
 
-                    startActivity(subCategoryMove);
+                        startActivity(subCategoryMove);
+                    }
+                    else
+                    {
+                        Intent newCategory = new Intent("com.diemen.easelife.easelife.ADDNEWSTUFF");
+                        newCategory.putExtra("object",EaseLifeConstants.CATEGORIES_OBJECT);
+                        startActivity(newCategory);
+                    }
                     finish(); // Finish the current activity
                 }
             });

@@ -44,8 +44,8 @@ private int categoryId;
 
     @Override
     public int getCount() {
-        return subcategories.size();
-    }
+        return subcategories.size()+1;
+    } // the +1 has been added to show the Add Subcategory button at the end of the grid to add a new subcategory
 
     @Override
     public Object getItem(int position) {
@@ -74,37 +74,39 @@ private int categoryId;
         {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.textView.setText(subcategories.get(position).getSubcategoryName()
-                +" ("+subcategories.get(position).getLikes()+")");
-        String imageName = subcategories.get(position).getImagePath();
+        if(position != subcategories.size()) {
+            holder.textView.setText(subcategories.get(position).getSubcategoryName()
+                    + " (" + subcategories.get(position).getLikes() + ")");
+            String imageName = subcategories.get(position).getImagePath();
 
-        if(imageName != null)
-        {
-            if(Util.isInteger(imageName))
-            {
-                holder.imageView.setImageResource(
-                        subcategoriesThumbHM.get(Integer.parseInt(imageName)));
+            if (imageName != null) {
+                if (Util.isInteger(imageName)) {
+                    holder.imageView.setImageResource(
+                            subcategoriesThumbHM.get(Integer.parseInt(imageName)));
+                } else {
+                    File sd = Environment.getExternalStorageDirectory();
+                    File image = new File(sd + EaseLifeConstants.imagesPath, imageName);
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+                    //  bitmap = Bitmap.createScaledBitmap(bitmap,350
+                    //,parent.getHeight(),true);
+                    holder.imageView.setImageBitmap(bitmap);
+                }
+            } else {
+                holder.imageView.setImageResource(R.drawable.imagenotselected);
             }
-            else
-            {
-                File sd = Environment.getExternalStorageDirectory();
-                File image = new File(sd+ EaseLifeConstants.imagesPath, imageName);
-                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
-                //  bitmap = Bitmap.createScaledBitmap(bitmap,350
-                //,parent.getHeight(),true);
-                holder.imageView.setImageBitmap(bitmap);
-            }
+            holder.imageView.setTag(subcategories.get(position));
         }
         else
         {
-            holder.imageView.setImageResource(R.drawable.imagenotselected);
+            holder.imageView.setImageResource(R.drawable.add_category);
+            holder.textView.setText("Add Subcategory");
+            holder.imageView.setTag(null);
         }
-        holder.imageView.setTag(subcategories.get(position));
         return convertView;
     }
 
-    private static HashMap<Integer,Integer> subcategoriesThumbHM = new HashMap<Integer,Integer>();
+    public static HashMap<Integer,Integer> subcategoriesThumbHM = new HashMap<Integer,Integer>();
     static class ViewHolder
     {
         TextView textView;

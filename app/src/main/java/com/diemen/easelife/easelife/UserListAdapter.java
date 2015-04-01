@@ -26,11 +26,11 @@ import java.util.List;
 public class UserListAdapter extends BaseAdapter {
 
     private Activity activity;
-    private List<User> data;
+    private ArrayList<User> data;
     private static LayoutInflater inflater=null;
 
 
-    public UserListAdapter(Activity a, List<User> d) {
+    public UserListAdapter(Activity a, ArrayList<User> d) {
         activity = a;
         data=d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
