@@ -143,8 +143,8 @@ public class UserListActivity extends ActionBarActivity {
         StringBuilder message = new StringBuilder();
         message.append("Hi ");
         message.append(destionationUser.getName());
-        message.append(",");
-        message.append("I need ");
+        message.append(",\n");
+        message.append("Subcategory Name: ");
         message.append(subcategory.getSubcategoryName());
         message.append(". ");
         message.append(subcategory.getDescription());
