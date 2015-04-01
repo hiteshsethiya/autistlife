@@ -179,8 +179,9 @@ public class ChatActivity extends ActionBarActivity {
         if(id == R.id.maps_activity)
         {
             Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
-            mapsActivity.putExtra(EaseLifeConstants.LATITUDE,0.0);
-            mapsActivity.putExtra(EaseLifeConstants.LONGITUDE,0.0);
+            mapsActivity.putExtra(EaseLifeConstants.LATITUDE,12.9643074);
+            mapsActivity.putExtra(EaseLifeConstants.LONGITUDE,77.7140015);
+            mapsActivity.putExtra("object",EaseLifeConstants.ISCHATACTIVITY);
             startActivity(mapsActivity);
         }
         return super.onOptionsItemSelected(item);

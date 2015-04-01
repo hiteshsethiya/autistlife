@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.diemen.easelife.model.EaseLifeConstants;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -60,23 +61,36 @@ public class MapsActivity extends Activity implements
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
         setCurrentLocationButton = (ImageButton) findViewById(R.id.current_location_button);
-        try
-        {
-            isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        setupMapIfNeeded();
+
+
+        if(getIntent().getStringExtra("object") != null) {
+            /*
+            If we get a user's location from chats activity then show the user's location else try to show the Current location of the device
+             */
+            mCurrentLocation = new LatLng(getIntent().getDoubleExtra(EaseLifeConstants.LATITUDE, 0.0),
+                    getIntent().getDoubleExtra(EaseLifeConstants.LONGITUDE, 0.0));
+            if(theMap == null)
+            {
+                Toast.makeText(MapsActivity.this,"Unable to create Maps",Toast.LENGTH_SHORT).show();
+                setupMapIfNeeded();
+
+            }
+            theMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 18.0f));
         }
-        catch(Exception e)
-        {
-            Log.e(TAG,"Exception in checking if GPS is enabled or network is enabled",e);
+        else {
+            try {
+                isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception in checking if GPS is enabled or network is enabled", e);
+            }
+
+
+            buildGoogleApiClient();
+            mGoogleApiClient.connect();
+            showAlertDialog();
         }
-
-
-        theMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map_fragment)).getMap();
-
-        buildGoogleApiClient();
-        mGoogleApiClient.connect();
-        showAlertDialog();
-
         setCurrentLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,13 +162,15 @@ public class MapsActivity extends Activity implements
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if(getIntent().getStringExtra("object") == null) {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
