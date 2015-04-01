@@ -305,12 +305,27 @@ public class AddNewStuff extends ActionBarActivity {
                 newCategory.setCategoryName(name);
                 newCategory.setDescription(description);
                 newCategory.setImageResourcePath(selectedImagePath);
+                newCategory.setActive(true);
             }
             newCategory.save(this);
         }
         else if(newSubcategory != null)
         {
-            newSubcategory = new Subcategory(categoryId, name,selectedImagePath, latitude, longitude,new Date(),true,description,0);
+            if(isEdit == false) {
+                newSubcategory = new Subcategory(categoryId, name, selectedImagePath, latitude, longitude, new Date(), true, description, 0);
+            }
+            else
+            {
+                newSubcategory.setActive(true);
+                newSubcategory.setCategoryId(categoryId);
+                newSubcategory.setDescription(description);
+                newSubcategory.setSubcategoryName(name);
+                newSubcategory.setLatitude(latitude);
+                newSubcategory.setLongitude(longitude);
+                newSubcategory.setCreatedAt(new Date());
+                newSubcategory.setLikes(0);
+                newSubcategory.setImagePath(selectedImagePath);
+            }
             newSubcategory.save(this);
         }
 

@@ -80,7 +80,7 @@ public class SubcategoryActivity extends ActionBarActivity{
                 Subcategory editSubcategoryObject = (Subcategory)clickedImageView.getTag();
                 if(editSubcategoryObject != null) {
                     addNewStuffIntent.putExtra(EaseLifeConstants.PARCELABLE_OBJECT, editSubcategoryObject);
-
+                    addNewStuffIntent.putExtra("categoryId",editSubcategoryObject.getCategoryId());
                     addNewStuffIntent.putExtra("object", EaseLifeConstants.SUB_CATEGORIES_OBJECT);
                     startActivity(addNewStuffIntent);
                 }
