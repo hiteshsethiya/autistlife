@@ -2,6 +2,7 @@ package com.diemen.easelife.pushnotificationhandler;
 
 import com.diemen.easelife.easelife.*;
 import com.diemen.easelife.model.Chat;
+import com.diemen.easelife.model.EaseLifeConstants;
 import com.diemen.easelife.sqllite.DBManager;
 import com.parse.FindCallback;
 import com.parse.ParseGeoPoint;
@@ -17,6 +18,8 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -152,17 +155,35 @@ public class ChatActivity extends ActionBarActivity {
             }
         });
 
-
-
-
     }
 
     private void appendMessage(Message m) {
-
                 listMessages.add(m);
                 adapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_chat_activity, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /*
+        Get the id of the item that has been clicked and call events
+         */
+
+        int id = item.getItemId();
+        if(id == R.id.maps_activity)
+        {
+            Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
+            mapsActivity.putExtra(EaseLifeConstants.LATITUDE,0.0);
+            mapsActivity.putExtra(EaseLifeConstants.LONGITUDE,0.0);
+            startActivity(mapsActivity);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showMessages(Message msg)
@@ -180,7 +201,7 @@ public class ChatActivity extends ActionBarActivity {
         } catch (com.parse.ParseException e) {
             e.printStackTrace();
         }
-        Log.e(" ",queryDriver.getClassName());
+        Log.e(" ", queryDriver.getClassName());
     }
 
 
@@ -191,4 +212,6 @@ public class ChatActivity extends ActionBarActivity {
         Intent i = new Intent(this,StartActivity.class);
         startActivity(i);
     }
+
+
 }

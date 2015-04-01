@@ -23,4 +23,7 @@ public class EaseLifeConstants {
             + "easelife/";
 
     public final static String ADD_CATEGORY = "Add Category";
+
+    public final static String LATITUDE = "latitude";
+    public final static String LONGITUDE = "longitude";
 }

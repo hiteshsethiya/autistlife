@@ -200,7 +200,7 @@ public class AddNewStuff extends ActionBarActivity {
         int id = item.getItemId();
         if(id == R.id.delete_action)
         {
-            //The user has chosen to delete an entity - entity{categories}
+
         }
         return super.onOptionsItemSelected(item);
     }
