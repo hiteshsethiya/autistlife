@@ -134,7 +134,7 @@ public class MyService extends Service implements SensorEventListener {
                     chat.setSenderPhone(currentUser.getString("PhoneNumber"));
                     chat.setReceiver(Receiver);
                     chat.setReceiverPhone(ReceiverPhone);
-                    chat.setMessage(currentUser + "might be Anxious.You Should se him.");
+                    chat.setMessage(currentUser.getUsername() + "might be Anxious.You Should se him.");
                     Date date = new Date();
                     DBManager.getInstance().addChat(chat);
 
@@ -168,7 +168,7 @@ public class MyService extends Service implements SensorEventListener {
                     chat.setSenderPhone(currentUser.getString("PhoneNumber"));
                     chat.setReceiver(Receiver);
                     chat.setReceiverPhone(ReceiverPhone);
-                    chat.setMessage(currentUser + "might be Anxious.You Should se him.");
+                    chat.setMessage(currentUser.getUsername() + "might be Anxious.You Should se him.");
                     Date date = new Date();
                     DBManager.getInstance().addChat(chat);
 
