@@ -14,6 +14,20 @@ import android.util.FloatMath;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.diemen.easelife.model.Chat;
+import com.diemen.easelife.model.User;
+import com.diemen.easelife.sqllite.DBManager;
+import com.diemen.easelife.util.AppSettings;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
+
 
 /**
  * Created by user on 30-01-2015.
@@ -103,16 +117,81 @@ public class MyService extends Service implements SensorEventListener {
         mShakeDetector.setOnShakeListener(new OnShakeListener() {
             @Override
             public void onShake(int count) {
-                  /*
-                 * The following method, "handleShakeEvent(count):" is a stub //
-                 * method you would use to setup whatever you want done once the
-                 * device has been shook.
-                 */
                 Toast.makeText(getApplicationContext(),"Shake Has Happened",Toast.LENGTH_LONG).show();
 
+                AppSettings aps=new AppSettings(getApplicationContext());
 
-              //  Log.d("Shaker","Do Something Anuj");
-                // handleShakeEvent(count);
+                User user1=aps.getUser1();
+                User user2=aps.getUser2();
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                if(user1!=null)
+                {
+                    Chat chat=new Chat();
+                    String ReceiverPhone=user1.getPhoneNo();
+                    String Receiver=user1.getName();
+                    chat.setSelf(true);
+                    chat.setSender(currentUser.getUsername());
+                    chat.setSenderPhone(currentUser.getString("PhoneNumber"));
+                    chat.setReceiver(Receiver);
+                    chat.setReceiverPhone(ReceiverPhone);
+                    chat.setMessage(currentUser + "might be Anxious.You Should se him.");
+                    Date date = new Date();
+                    DBManager.getInstance().addChat(chat);
+
+
+                    JSONObject data;
+                    try {
+                        ParseQuery pQuery = new ParseInstallation().getQuery();
+                        pQuery.whereEqualTo("phone", ReceiverPhone);
+                        ParsePush pushMessage = new ParsePush();
+                        pushMessage.setQuery(pQuery);
+                        //Always keep in mind "I am the Sender"
+                        //when the user will receive this message he will be the sender;
+                        data = new JSONObject("{\"alert\":\"Urgent Message\",\"Message\": \"" + chat.getMessage() + "\",\"ReceiverPhone\": \"" + currentUser.getString("PhoneNumber") + "\",\"Sender\":\"" + Receiver + "\",\"Receiver\":\"" + currentUser.getUsername() + "\" ,\"SenderPhone\":\"" + ReceiverPhone + "\",\"ReceivedOn\":\"" + date.getTime() + "\"}");
+                        pushMessage.setMessage("Message From Ease Life");
+                        pushMessage.setData(data);
+                        pushMessage.sendInBackground();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                if(user2!=null)
+                {
+                    Chat chat=new Chat();
+                    String ReceiverPhone=user2.getPhoneNo();
+                    String Receiver=user2.getName();
+                    chat.setSelf(true);
+                    chat.setSender(currentUser.getUsername());
+                    chat.setSenderPhone(currentUser.getString("PhoneNumber"));
+                    chat.setReceiver(Receiver);
+                    chat.setReceiverPhone(ReceiverPhone);
+                    chat.setMessage(currentUser + "might be Anxious.You Should se him.");
+                    Date date = new Date();
+                    DBManager.getInstance().addChat(chat);
+
+
+                    JSONObject data;
+                    try {
+                        ParseQuery pQuery = new ParseInstallation().getQuery();
+                        pQuery.whereEqualTo("phone", ReceiverPhone);
+                        ParsePush pushMessage = new ParsePush();
+                        pushMessage.setQuery(pQuery);
+                        //Always keep in mind "I am the Sender"
+                        //when the user will receive this message he will be the sender;
+                        data = new JSONObject("{\"alert\":\"Urgent Message\",\"Message\": \"" + chat.getMessage() + "\",\"ReceiverPhone\": \"" + currentUser.getString("PhoneNumber") + "\",\"Sender\":\"" + Receiver + "\",\"Receiver\":\"" + currentUser.getUsername() + "\" ,\"SenderPhone\":\"" + ReceiverPhone + "\",\"ReceivedOn\":\"" + date.getTime() + "\"}");
+                        pushMessage.setMessage("Message From Ease Life");
+                        pushMessage.setData(data);
+                        pushMessage.sendInBackground();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
             }
         });
 
