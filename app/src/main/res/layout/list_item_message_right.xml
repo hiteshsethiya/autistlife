@@ -6,8 +6,9 @@
     android:gravity="right"
     android:orientation="vertical"
     android:paddingBottom="5dp"
-    android:paddingRight="10dp"
-    android:paddingTop="5dp" >
+    android:paddingRight="2dp"
+    android:paddingTop="5dp"
+    android:paddingLeft="15dp">
 
     <TextView
         android:id="@+id/lblMsgFrom"

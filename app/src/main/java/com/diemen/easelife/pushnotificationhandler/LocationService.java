@@ -12,21 +12,24 @@ import android.util.Log;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 
-/**
- * Created by AnSingh on 3/19/2015.
- */
+
+ // Created by AnSingh on 3/19/2015.
+
 
 
 
 public class LocationService extends Service implements LocationListener {
 
     LocationManager locationManager;
+    ParseGeoPoint currentLoc=new ParseGeoPoint();
     @Override
     public void onLocationChanged(Location location) {
         Log.d("Location", "Location has recorded Anuj");
 
         ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
-        currentInstall.put("location", new ParseGeoPoint(location.getLatitude(),location.getLongitude()));
+        currentLoc.setLongitude(location.getLongitude());
+        currentLoc.setLatitude(location.getLatitude());
+        currentInstall.put("location", currentLoc);
     }
 
     @Override

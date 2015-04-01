@@ -3,8 +3,10 @@ package com.diemen.easelife.pushnotificationhandler;
 import com.diemen.easelife.easelife.*;
 import com.diemen.easelife.model.Chat;
 import com.diemen.easelife.sqllite.DBManager;
+import com.parse.FindCallback;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -14,8 +16,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +26,9 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Console;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +74,10 @@ public class ChatActivity extends ActionBarActivity {
                     List<Chat> list = DBManager.getInstance().getAllChats(ReceiverPhone);
                     for (Chat c : list) {
                         Message newmessage = new Message();
+                        if(c.isSelf()==true)
                         newmessage.setFromName(c.getSender());
+                        else
+                        newmessage.setFromName(c.getReceiver());
                         newmessage.setMessage(c.getMessage());
                         newmessage.setSelf(c.isSelf());
                         appendMessage(newmessage);
@@ -84,7 +90,10 @@ public class ChatActivity extends ActionBarActivity {
                     List<Chat> list = DBManager.getInstance().getAllChats(ReceiverPhone);
                     for (Chat c : list) {
                         Message newmessage = new Message();
-                        newmessage.setFromName(c.getSender());
+                        if(c.isSelf()==true)
+                            newmessage.setFromName(c.getSender());
+                        else
+                            newmessage.setFromName(c.getReceiver());
                         newmessage.setMessage(c.getMessage());
                         newmessage.setSelf(c.isSelf());
                         appendMessage(newmessage);
@@ -126,48 +135,34 @@ public class ChatActivity extends ActionBarActivity {
                         pQuery.whereEqualTo("phone", ReceiverPhone);
                         ParsePush pushMessage = new ParsePush();
                         pushMessage.setQuery(pQuery);
-
                         //Always keep in mind "I am the Sender"
                         //when the user will receive this message he will be the sender;
                         data = new JSONObject("{\"alert\":\"New Message\",\"Message\": \"" + chat.getMessage() + "\",\"ReceiverPhone\": \"" + SenderPhone + "\",\"Sender\":\"" + Receiver + "\",\"Receiver\":\"" + Sender + "\" ,\"SenderPhone\":\"" + ReceiverPhone + "\",\"ReceivedOn\":\"" + date.getTime() + "\"}");
-                        pushMessage.setMessage("Anuj");
+                        pushMessage.setMessage("Message From Ease Life");
                         pushMessage.setData(data);
                         pushMessage.sendInBackground();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
+
+
                 }
             }
         });
+
+
+
+
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_chat_activity, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        switch (id)
-        {
-            case R.id.maps_activity: Intent map = new Intent(getApplicationContext(),MapsActivity.class);
-                                     startActivity(map);
-                                     break;
-         default:break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     private void appendMessage(Message m) {
-        listMessages.add(m);
-        adapter.notifyDataSetChanged();
+
+                listMessages.add(m);
+                adapter.notifyDataSetChanged();
+
+
     }
 
     private void showMessages(Message msg)
@@ -175,10 +170,24 @@ public class ChatActivity extends ActionBarActivity {
       appendMessage(msg);
     }
 
+    public void GetLocation()
+    {
+        final ParseQuery<ParseObject> queryDriver=new ParseQuery("Installation");
+        queryDriver.whereEqualTo("phone", "9742510299");
+        queryDriver.whereExists("location");
+        try {
+            queryDriver.find();
+        } catch (com.parse.ParseException e) {
+            e.printStackTrace();
+        }
+        Log.e(" ",queryDriver.getClassName());
+    }
+
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        GetLocation();
         Intent i = new Intent(this,StartActivity.class);
         startActivity(i);
     }
