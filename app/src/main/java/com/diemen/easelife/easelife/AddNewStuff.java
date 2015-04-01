@@ -182,9 +182,12 @@ public class AddNewStuff extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(true) {
-            getMenuInflater().inflate(R.menu.menu_add_new_stuff, menu);
+        getMenuInflater().inflate(R.menu.menu_add_new_stuff, menu);
+        if(isEdit == false) {
+                MenuItem delete = menu.findItem(R.id.delete_action);
+                delete.setVisible(false);
         }
+
         return true;
     }
 
