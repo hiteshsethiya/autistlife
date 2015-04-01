@@ -8,11 +8,17 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.parse.FindCallback;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 
- // Created by AnSingh on 3/19/2015.
+// Created by AnSingh on 3/19/2015.
 
 
 
@@ -24,11 +30,21 @@ public class LocationService extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.d("Location", "Location has recorded Anuj");
-        final ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
+
         currentLoc.setLongitude(location.getLongitude());
         currentLoc.setLatitude(location.getLatitude());
-        currentInstall.put("location", currentLoc);
-        currentInstall.saveInBackground();
+        ParseQuery<ParseObject> queryDriver=new ParseQuery("_User");
+        queryDriver.whereEqualTo("PhoneNumber","9742510299");
+        queryDriver.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+                for (ParseObject d : parseObjects) {
+                   d.put("location",currentLoc);
+                   d.saveInBackground();
+                   Log.e("logging location",d.get("location").toString());
+                }
+            }
+        });
     }
 
     @Override

@@ -13,7 +13,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
@@ -36,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by user on 11-01-2015.
@@ -50,6 +53,8 @@ public class ChatActivity extends ActionBarActivity {
     private List<Message> listMessages;
     private ListView listViewMessages;
     private static final String TAG_SELF = "self";
+    public String ReceiverPhoneNumber;
+    ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,7 @@ public class ChatActivity extends ActionBarActivity {
         final String SenderPhone=chatIntent.getString("SenderPhone");
         final String Receiver=chatIntent.getString("Receiver");
         final String Sender=chatIntent.getString("Sender");
+        ReceiverPhoneNumber=ReceiverPhone;
 
 
         String SrcActivity=chatIntent.get("SrcActivity").toString();
@@ -169,47 +175,59 @@ public class ChatActivity extends ActionBarActivity {
         return true;
     }
 
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /*
         Get the id of the item that has been clicked and call events
          */
+        getUserLocation1(ReceiverPhoneNumber);
 
-        int id = item.getItemId();
+        /*   int id = item.getItemId();
         if(id == R.id.maps_activity)
         {
             Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
-            mapsActivity.putExtra(EaseLifeConstants.LATITUDE,12.9643074);
-            mapsActivity.putExtra(EaseLifeConstants.LONGITUDE,77.7140015);
-            mapsActivity.putExtra("object",EaseLifeConstants.ISCHATACTIVITY);
+            mapsActivity.putExtra(EaseLifeConstants.LATITUDE,point.getLatitude());
+            mapsActivity.putExtra(EaseLifeConstants.LONGITUDE,point.getLongitude());
             startActivity(mapsActivity);
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void getUserLocation1(String PhoneNumber){
+        ParseGeoPoint point=new ParseGeoPoint();
+        ParseQuery<ParseObject> queryDriver=new ParseQuery("_User");
+        queryDriver.whereEqualTo("PhoneNumber","9742510299");
+        queryDriver.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+                for (ParseObject d : parseObjects) {
+                    ParseGeoPoint point = (ParseGeoPoint) d.get("location");
+                    Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
+                    mapsActivity.putExtra(EaseLifeConstants.LATITUDE,point.getLatitude());
+                    mapsActivity.putExtra(EaseLifeConstants.LONGITUDE,point.getLongitude());
+                    startActivity(mapsActivity);
+                }
+            }
+        });
+    }
+
+
+
 
     private void showMessages(Message msg)
     {
       appendMessage(msg);
     }
 
-    public void GetLocation()
-    {
-        final ParseQuery<ParseObject> queryDriver=new ParseQuery("Installation");
-        queryDriver.whereEqualTo("phone", "9742510299");
-        queryDriver.whereExists("location");
-        try {
-            queryDriver.find();
-        } catch (com.parse.ParseException e) {
-            e.printStackTrace();
-        }
-        Log.e(" ", queryDriver.getClassName());
-    }
 
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        GetLocation();
         Intent i = new Intent(this,StartActivity.class);
         startActivity(i);
     }
