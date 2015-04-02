@@ -200,16 +200,19 @@ public class ChatActivity extends ActionBarActivity {
     public void getUserLocation1(String PhoneNumber){
         ParseGeoPoint point=new ParseGeoPoint();
         ParseQuery<ParseObject> queryDriver=new ParseQuery("_User");
-        queryDriver.whereEqualTo("PhoneNumber","9742510299");
+        queryDriver.whereEqualTo("PhoneNumber",PhoneNumber);
         queryDriver.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
                 for (ParseObject d : parseObjects) {
                     ParseGeoPoint point = (ParseGeoPoint) d.get("location");
-                    Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
-                    mapsActivity.putExtra(EaseLifeConstants.LATITUDE,point.getLatitude());
-                    mapsActivity.putExtra(EaseLifeConstants.LONGITUDE,point.getLongitude());
-                    startActivity(mapsActivity);
+
+                    if(point!=null) {
+                        Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
+                        mapsActivity.putExtra(EaseLifeConstants.LATITUDE, point.getLatitude());
+                        mapsActivity.putExtra(EaseLifeConstants.LONGITUDE, point.getLongitude());
+                        startActivity(mapsActivity);
+                    }
                 }
             }
         });
