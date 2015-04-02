@@ -209,7 +209,7 @@ public class UserListActivity extends ActionBarActivity {
                         if (hasPhone >= 0)
                         {
                             Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId,null, null);
-                            phones.moveToFirst();
+                          //  phones.moveToFirst();
                             while (phones.moveToNext())
                             {
                                 phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
