@@ -30,11 +30,11 @@ public class LocationService extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.d("Location", "Location has recorded Anuj");
-
+        ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
         currentLoc.setLongitude(location.getLongitude());
         currentLoc.setLatitude(location.getLatitude());
         ParseQuery<ParseObject> queryDriver=new ParseQuery("_User");
-        queryDriver.whereEqualTo("PhoneNumber","9742510299");
+        queryDriver.whereEqualTo("PhoneNumber",currentInstall.get("phone").toString());
         queryDriver.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
