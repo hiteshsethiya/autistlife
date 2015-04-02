@@ -44,10 +44,10 @@ public class CategoriesImageAdapter extends BaseAdapter{
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         categoriesThumbHM.put(1,R.drawable.places);
         categoriesThumbHM.put(2,R.drawable.movie);
-        categoriesThumbHM.put(3,R.drawable.singing);
-        categoriesThumbHM.put(4,R.drawable.people);
-        categoriesThumbHM.put(5,R.drawable.pizza);
-        categoriesThumbHM.put(8,R.drawable.user);
+        categoriesThumbHM.put(3,R.drawable.music);
+        categoriesThumbHM.put(4,R.drawable.users);
+        categoriesThumbHM.put(5,R.drawable.food);
+        categoriesThumbHM.put(8,R.drawable.users);
         categoriesThumbHM.put(9,R.drawable.school_new);
         categoriesThumbHM.put(10,R.drawable.music);
 

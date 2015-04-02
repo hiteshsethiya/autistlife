@@ -211,6 +211,7 @@ public class ChatActivity extends ActionBarActivity {
                         Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
                         mapsActivity.putExtra(EaseLifeConstants.LATITUDE, point.getLatitude());
                         mapsActivity.putExtra(EaseLifeConstants.LONGITUDE, point.getLongitude());
+                        mapsActivity.putExtra("object",EaseLifeConstants.ISCHATACTIVITY);
                         startActivity(mapsActivity);
                     }
                 }

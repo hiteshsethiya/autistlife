@@ -4,8 +4,15 @@
     tools:context=".StartActivity">
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/current_location"
         android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="CurrentLocation"
+        android:icon="@drawable/marker"
+        />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="101"
         app:showAsAction="never"
         android:title="@string/action_settings" />
 </menu>
