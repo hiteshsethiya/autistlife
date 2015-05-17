@@ -3,6 +3,7 @@ package com.diemen.easelife.pushnotificationhandler;
 import com.diemen.easelife.easelife.*;
 import com.diemen.easelife.model.Chat;
 import com.diemen.easelife.model.EaseLifeConstants;
+import com.diemen.easelife.model.User;
 import com.diemen.easelife.sqllite.DBManager;
 import com.parse.FindCallback;
 import com.parse.ParseGeoPoint;
@@ -207,12 +208,17 @@ public class ChatActivity extends ActionBarActivity {
                     ParseUser requestedUserPO = (ParseUser) requestedUser;
                     ParseGeoPoint point = (ParseGeoPoint) requestedUser.get("location");
 
+                    User theWantedUser = new User();
+                    theWantedUser.setPhoneNo((String)requestedUser.get("PhoneNumber"));
+                    theWantedUser = theWantedUser.getUserByPhonenumber(ChatActivity.this);
 
                     if(point!=null) {
                         Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
                         mapsActivity.putExtra(EaseLifeConstants.LATITUDE, point.getLatitude());
                         mapsActivity.putExtra(EaseLifeConstants.LONGITUDE, point.getLongitude());
                         mapsActivity.putExtra(EaseLifeConstants.LAST_LOCATION_UPDATE,requestedUserPO.getUpdatedAt());
+                        mapsActivity.putExtra(EaseLifeConstants.USER_NAME,theWantedUser.getName());
+                        mapsActivity.putExtra(EaseLifeConstants.CONTACT_ID,theWantedUser.getcontact_id());
                         mapsActivity.putExtra("object",EaseLifeConstants.ISCHATACTIVITY);
                         startActivity(mapsActivity);
                     }
@@ -237,6 +243,8 @@ public class ChatActivity extends ActionBarActivity {
         Intent i = new Intent(this,StartActivity.class);
         startActivity(i);
     }
+
+
 
 
 }

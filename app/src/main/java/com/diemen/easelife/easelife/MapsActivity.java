@@ -2,9 +2,12 @@ package com.diemen.easelife.easelife;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,15 +15,20 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.diemen.easelife.model.EaseLifeConstants;
+import com.diemen.easelife.model.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -36,6 +44,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,6 +67,7 @@ public class MapsActivity extends Activity implements
     protected Location mLastLocation;
     private LatLng mCurrentLocation;
 
+    private User theUser;
     private Date locationLastModifiedAt;
     private static final LatLng EQUATOR = new LatLng(0.0, 0.0);
     private GoogleMap theMap;
@@ -77,9 +89,12 @@ public class MapsActivity extends Activity implements
             If we get a user's location from chats activity then show the user's location else try to show the Current location of the device
              */
 
+            theUser = new User();
             mCurrentLocation = new LatLng(getIntent().getDoubleExtra(EaseLifeConstants.LATITUDE, 0.0),
                     getIntent().getDoubleExtra(EaseLifeConstants.LONGITUDE, 0.0));
 
+            theUser.setcontact_id(getIntent().getStringExtra(EaseLifeConstants.CONTACT_ID));
+            theUser.setName(getIntent().getStringExtra(EaseLifeConstants.USER_NAME));
             locationLastModifiedAt = (Date)getIntent().getSerializableExtra(EaseLifeConstants.LAST_LOCATION_UPDATE);
 
 
@@ -89,8 +104,13 @@ public class MapsActivity extends Activity implements
                 setupMapIfNeeded();
 
             }
+            Bitmap theUserBitmapImage = getImageByContactId();
+            if(theUserBitmapImage != null)
+            {
+
+            }
             theMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 18.0f));
-            addCustomMarker("Anuj Kumar Singh");
+            addCustomMarker(theUser.getName());
 
         }
         else {
@@ -218,8 +238,36 @@ public class MapsActivity extends Activity implements
     public void addCustomMarker(String userName)
     {
         Bitmap.Config conf  = Bitmap.Config.ARGB_8888;
-        Bitmap theInjectedBitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.user);
+
+        Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long
+                .parseLong(theUser.getcontact_id()));
+
+        Uri imageUri = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+        ImageButton imageView = (ImageButton)findViewById(R.id.current_location_button);
+        try {
+            imageView.setImageURI(imageUri);
+        }
+        catch(Exception e)
+        {
+
+        }
+
+        Bitmap theInjectedBitmap;
+
+        if(imageView.getDrawable() == null) {
+            theInjectedBitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.user);
+        }
+        else
+        {try {
+            theInjectedBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+        }
+            catch(Exception e)
+            {
+                theInjectedBitmap = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.user);
+            }
+        }
         Bitmap theBitmap = Bitmap.createBitmap(80, 80, conf);
         Canvas canvas = new Canvas(theBitmap);
         canvas.drawColor(Color.WHITE);
@@ -258,5 +306,51 @@ public class MapsActivity extends Activity implements
             Log.e(TAG," Unable to parse locationLastModifiedAt",e);
         }
         return modifiedAtDate;
+    }
+
+    public Bitmap getImageByContactId()
+    {
+        try {
+            if (theUser.getcontact_id() != null) {
+                Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long
+                        .parseLong(theUser.getcontact_id()));
+
+                Uri imageUri = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+
+                // Bitmap theUserImageBitmap = BitmapDescriptorFactory.
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                if (bitmap != null) {
+                    return Bitmap.createScaledBitmap(bitmap, 80, 80, false);
+                }
+
+            }
+        }
+        catch(FileNotFoundException e)
+        {
+            Log.e(TAG,"File Not FOUND",e);
+        }
+        catch(IOException e)
+        {
+            Log.e(TAG,"IO exception",e);
+        }
+        return null;
+    }
+
+    public boolean isUriValid(Uri uri)
+    {
+        ContentResolver cr = getContentResolver();
+        String[] projection = {MediaStore.MediaColumns.DATA};
+        Cursor cur = cr.query(uri, projection, null, null, null);
+        if(cur != null)
+        {
+            cur.moveToFirst();
+            String filePath = cur.getString(0);
+
+            if(new File(filePath).exists()){
+                return true;
+            }
+            // content Uri was invalid or some other error occurred
+        }
+        return false;
     }
 }

@@ -218,6 +218,24 @@ public class DBManager {
         return status;
     }
 
+    public User getUserByPhoneNumber(String phoneNumber)
+    {
+        List<User> list = new ArrayList<User>();
+        try
+        {
+            QueryBuilder<User,Integer> qb = getDbHelper().getUserDao().queryBuilder();
+
+            qb.where().eq(User.CONTACT_NUMBER_COL_NAME,phoneNumber);
+
+            list = qb.query();
+        }
+        catch(SQLException e)
+        {
+            Log.e("DBManager","SQL exception while getting User object by phone :"+phoneNumber,e);
+        }
+        return list.get(list.size()-1);
+    }
+
     /*public int getCategoryLike(int id)
     {
         QueryBuilder<Categories,Integer> categoryQB = getDbHelper().getCategoryDao().queryBuilder();

@@ -1,11 +1,27 @@
 package com.diemen.easelife.model;
 
+import android.content.Context;
+
+import com.diemen.easelife.sqllite.DBManager;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
  * Created by user on 23-01-2015.
  */
 public class User {
+
+    @DatabaseField(generatedId = true)
+    private int userid;
+
+    @DatabaseField
+    private String name;
+
+    @DatabaseField
+    private String contact_id;
+
+
+    @DatabaseField
+    private String phoneNo;
 
     public User() {
     }
@@ -30,15 +46,6 @@ public class User {
         this.userid = userid;
     }
 
-    @DatabaseField(generatedId = true)
-    private int userid;
-
-    @DatabaseField
-    private String name;
-
-    @DatabaseField
-    private String contact_id;
-
     public String getcontact_id() {
         return contact_id;
     }
@@ -55,9 +62,6 @@ public class User {
         this.phoneNo = phoneNo;
     }
 
-    @DatabaseField
-    private String phoneNo;
-
     public String getName() {
         return name;
     }
@@ -66,4 +70,11 @@ public class User {
         this.name = name;
     }
 
+    public User getUserByPhonenumber(Context context)
+    {
+        return DBManager.getInstance(context).getUserByPhoneNumber(this.getPhoneNo());
+    }
+
+
+    public static final String CONTACT_NUMBER_COL_NAME = "phoneNo";
 }

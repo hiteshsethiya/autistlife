@@ -3,6 +3,8 @@ package com.diemen.easelife.easelife;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -14,8 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.diemen.easelife.model.User;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +34,7 @@ public class UserListAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<User> data;
     private static LayoutInflater inflater=null;
-
+    ImageView thumb_image;
 
     public UserListAdapter(Activity a, ArrayList<User> d) {
         activity = a;
@@ -58,7 +64,7 @@ public class UserListAdapter extends BaseAdapter {
 
             TextView title = (TextView) vi.findViewById(R.id.title); // title
             TextView artist = (TextView) vi.findViewById(R.id.artist); // artist name
-            ImageView thumb_image = (ImageView) vi.findViewById(R.id.list_image); // thumb image
+            thumb_image = (ImageView) vi.findViewById(R.id.list_image); // thumb image
 
             title.setTag(data.get(position));
             User song = data.get(position);
@@ -71,7 +77,20 @@ public class UserListAdapter extends BaseAdapter {
 
             title.setText(song.getName());
             artist.setText(song.getPhoneNo());
-            thumb_image.setImageURI(Image_uri);
+            File isFile = new File(Image_uri.getPath());
+
+            if(Image_uri != null && isFile != null && !isFile.exists()) {
+                thumb_image.setImageURI(Image_uri);
+            }
+            else
+            {
+                Bitmap theUserImageBitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.user);
+
+                Bitmap theScaledBitmap = Bitmap.createScaledBitmap(theUserImageBitmap
+                        ,thumb_image.getWidth(),thumb_image.getHeight(),false);
+
+                thumb_image.setImageBitmap(theScaledBitmap);
+            }
         }
         catch(Exception e)
         {
