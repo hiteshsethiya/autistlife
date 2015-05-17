@@ -18,5 +18,5 @@
     <string name="Cancel">Cancel</string>
     <string name="open_location_settings">Turn on location</string>
     <string name="new_user">New User</string>
-
+    <string name="last_location_modified_at">Last Updated: </string>
 </resources>

@@ -183,16 +183,15 @@ public class ChatActivity extends ActionBarActivity {
         /*
         Get the id of the item that has been clicked and call events
          */
-        getUserLocation1(ReceiverPhoneNumber);
+        int itemClicked = item.getItemId();
 
-        /*   int id = item.getItemId();
-        if(id == R.id.maps_activity)
+        switch(itemClicked)
         {
-            Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
-            mapsActivity.putExtra(EaseLifeConstants.LATITUDE,point.getLatitude());
-            mapsActivity.putExtra(EaseLifeConstants.LONGITUDE,point.getLongitude());
-            startActivity(mapsActivity);
-        }*/
+            case R.id.maps_activity : getUserLocation1(ReceiverPhoneNumber);
+                                     break;
+        }
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -204,13 +203,16 @@ public class ChatActivity extends ActionBarActivity {
         queryDriver.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
-                for (ParseObject d : parseObjects) {
-                    ParseGeoPoint point = (ParseGeoPoint) d.get("location");
+                for (ParseObject requestedUser : parseObjects) {
+                    ParseUser requestedUserPO = (ParseUser) requestedUser;
+                    ParseGeoPoint point = (ParseGeoPoint) requestedUser.get("location");
+
 
                     if(point!=null) {
                         Intent mapsActivity = new Intent("com.diemen.easelife.easelife.MAPSACTIVITY");
                         mapsActivity.putExtra(EaseLifeConstants.LATITUDE, point.getLatitude());
                         mapsActivity.putExtra(EaseLifeConstants.LONGITUDE, point.getLongitude());
+                        mapsActivity.putExtra(EaseLifeConstants.LAST_LOCATION_UPDATE,requestedUserPO.getUpdatedAt());
                         mapsActivity.putExtra("object",EaseLifeConstants.ISCHATACTIVITY);
                         startActivity(mapsActivity);
                     }

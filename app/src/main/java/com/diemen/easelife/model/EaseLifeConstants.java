@@ -26,5 +26,6 @@ public class EaseLifeConstants {
 
     public final static String LATITUDE = "latitude";
     public final static String LONGITUDE = "longitude";
+    public final static String LAST_LOCATION_UPDATE = "location_modified_at";
     public final static String ISCHATACTIVITY = "chatactivity";
 }
