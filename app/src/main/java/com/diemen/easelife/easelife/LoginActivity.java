@@ -22,6 +22,7 @@ import com.parse.SignUpCallback;
 public class LoginActivity extends ActionBarActivity {
     Button loginButton;
     Button signup;
+    Button newsignup;
     EditText username;
     EditText phone;
     String Name;
@@ -32,6 +33,7 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.login_layout);
         getSupportActionBar().setTitle("Login");
         signup=(Button)findViewById(R.id.signupbutton);
+        newsignup=(Button)findViewById(R.id.newsignup_btn);
         loginButton = (Button) findViewById(R.id.btnLogin);
         username = (EditText) findViewById(R.id.username);
         phone = (EditText) findViewById(R.id.phone);
@@ -42,6 +44,14 @@ public class LoginActivity extends ActionBarActivity {
             startActivity(i);
             finish();
         }
+
+        newsignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signup.setVisibility(View.VISIBLE);
+                loginButton.setVisibility(View.INVISIBLE);
+            }
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

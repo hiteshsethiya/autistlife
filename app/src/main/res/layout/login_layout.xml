@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dip">
+    android:padding="10dip"
+    android:weightSum="1">
     <!--  Name Label -->
     <TextView
         style="@style/textview_bold"
@@ -30,13 +31,25 @@
     <Button
         android:id="@+id/btnLogin"
         style="@style/btn"
-        android:layout_marginTop="60dip"
+        android:layout_marginTop="20dip"
         android:text="Login" />
 
     <Button
         android:id="@+id/signupbutton"
         style="@style/btn"
-        android:layout_marginTop="40dip"
-        android:text="SIGNUP" />
+        android:layout_marginTop="10dip"
+        android:text="SIGNUP"
+        android:visibility="invisible"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textSize="15dp"
+        android:layout_marginTop="70dip"
+        android:id="@+id/newsignup_btn"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.43" />
 
 </LinearLayout>
