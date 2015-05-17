@@ -37,7 +37,8 @@ public class SettingsActivity extends PreferenceActivity {
     CharSequence entries[];
     CharSequence entryValues[];
     List<User> categoryList;
-    Intent intent;
+    Intent shakeIntent;
+    Intent locationIntent;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -85,14 +86,14 @@ public class SettingsActivity extends PreferenceActivity {
                 Boolean shakebool=Boolean.parseBoolean(newValue.toString());
                 if(shakebool==true)
                 {
-                    intent = new Intent(getApplicationContext(),MyService.class);
-                    startService(intent);
+                    shakeIntent = new Intent(getApplicationContext(),MyService.class);
+                    startService(shakeIntent);
                     shakePref.setChecked(shakebool);
                     Toast.makeText(getApplicationContext(),"Anxiety Service Has Started",Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    stopService(intent);
+                    stopService(shakeIntent);
                     shakePref.setChecked(shakebool);
                     Toast.makeText(getApplicationContext(),"Anxiety Service Has Stopped",Toast.LENGTH_SHORT).show();
                 }
@@ -104,16 +105,17 @@ public class SettingsActivity extends PreferenceActivity {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 Boolean locbool=Boolean.parseBoolean(newValue.toString());
+                locationIntent = new Intent(SettingsActivity.this,LocationService.class);
                 if(locbool==true)
                 {
-                    intent = new Intent(getApplicationContext(),LocationService.class);
-                    startService(intent);
+
+                    startService(locationIntent);
                     locationPref.setChecked(locbool);
                     Toast.makeText(getApplicationContext(),"Location Service Has Started",Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    stopService(intent);
+                    stopService(locationIntent);
                     locationPref.setChecked(locbool);
                     Toast.makeText(getApplicationContext(),"Location Service Has Stopped",Toast.LENGTH_SHORT).show();
                 }

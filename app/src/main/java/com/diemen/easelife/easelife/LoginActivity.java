@@ -56,6 +56,9 @@ public class LoginActivity extends ActionBarActivity {
                     ParseUser.logInInBackground(Name, PhoneNo, new LogInCallback() {
                         public void done(ParseUser user, com.parse.ParseException e) {
                             if (user != null) {
+                                ParseInstallation currentInstall=ParseInstallation.getCurrentInstallation();
+                                currentInstall.put("phone",PhoneNo);
+                                currentInstall.saveEventually();
                                 Intent i = new Intent(getApplicationContext(), StartActivity.class);
                                 startActivity(i);
                                 finish();
